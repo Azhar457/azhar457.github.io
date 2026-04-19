@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azhar Muttaqien — Web Developer & Homelab Enthusiast</title>
+    <meta name="description"
+        content="Portfolio of Azhar Muttaqien, a Computer Science student at Universitas Pasundan. Passionate about web development, self-hosting, and homelab infrastructure.">
+    <link rel="icon" href="assets/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#020617',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- AOS (Animate on Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body class="bg-slate-950 text-slate-50 font-sans antialiased overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 h-20 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center gap-3 group">
+                    <div
+                        class="relative w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 p-0.5">
+                        <div class="w-full h-full rounded-[10px] bg-slate-950 flex items-center justify-center">
+                            <img src="assets/logo.png" alt="Logo" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    <span
+                        class="hidden sm:block text-lg font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent font-outfit">
+                        Azhar Muttaqien
+                    </span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="#home"
+                        class="nav-link px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-2 rounded-lg hover:bg-white/5">
+                        <i class="fas fa-home text-xs"></i> Home
+                    </a>
+                    <a href="#about"
+                        class="nav-link px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-2 rounded-lg hover:bg-white/5">
+                        <i class="fas fa-user text-xs"></i> About
+                    </a>
+                    <a href="#projects"
+                        class="nav-link px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-2 rounded-lg hover:bg-white/5">
+                        <i class="fas fa-project-diagram text-xs"></i> Projects
+                    </a>
+                    <a href="#contact"
+                        class="nav-link px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-2 rounded-lg hover:bg-white/5">
+                        <i class="fas fa-paper-plane text-xs"></i> Contact
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn"
+                    class="md:hidden p-2 rounded-lg bg-white/5 text-slate-400 hover:text-white transition-colors">
+                    <div class="w-6 h-5 relative flex flex-col justify-between overflow-hidden">
+                        <span id="line-1" class="w-full h-0.5 bg-current transition-all duration-300"></span>
+                        <span id="line-2" class="w-full h-0.5 bg-current transition-all duration-300"></span>
+                        <span id="line-3" class="w-full h-0.5 bg-current transition-all duration-300"></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-40 md:hidden bg-slate-950/95 backdrop-blur-xl transition-all duration-300 transform -translate-y-full opacity-0 pointer-events-none pt-24 px-4">
+        <div class="space-y-4">
+            <a href="#home"
+                class="mobile-nav-link flex items-center gap-4 px-6 py-4 text-lg font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="#about"
+                class="mobile-nav-link flex items-center gap-4 px-6 py-4 text-lg font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all">
+                <i class="fas fa-user"></i> About
+            </a>
+            <a href="#projects"
+                class="mobile-nav-link flex items-center gap-4 px-6 py-4 text-lg font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all">
+                <i class="fas fa-project-diagram"></i> Projects
+            </a>
+            <a href="#contact"
+                class="mobile-nav-link flex items-center gap-4 px-6 py-4 text-lg font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all">
+                <i class="fas fa-paper-plane"></i> Contact
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-950">
+        <!-- Background Decorations -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-[128px] animate-pulse">
+            </div>
+            <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[128px] animate-pulse"
+                style="animation-delay: 1s;"></div>
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-600/10 rounded-full blur-[150px]">
+            </div>
+            <!-- Grid Pattern -->
+            <div
+                class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
+            </div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center" data-aos="zoom-out"
+            data-aos-duration="1000">
+            <!-- Badge -->
+            <div
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-sm font-medium text-emerald-400">Available for Projects</span>
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 font-outfit">
+                <span class="text-white">Hi, I'm </span>
+                <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                    Azhar
+                </span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-xl sm:text-2xl md:text-3xl text-slate-400 font-light mb-4 font-outfit">
+                Web Developer & Homelab Enthusiast
+            </p>
+
+            <p class="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto mb-12 leading-relaxed">
+                Mahasiswa Teknik Informatika di Universitas Pasundan.
+                Membangun website yang indah dan infrastruktur self-hosted yang scalable.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <a href="#projects"
+                    class="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold text-white overflow-hidden transition-all hover:shadow-2xl hover:shadow-indigo-500/25 hover:scale-105">
+                    <span class="relative z-10 flex items-center gap-2">
+                        View My Work
+                        <i class="fas fa-external-link-alt text-xs group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                </a>
+
+                <a href="#contact"
+                    class="px-8 py-4 rounded-full font-semibold text-slate-300 border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:text-white transition-all hover:scale-105">
+                    Get In Touch
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto">
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div
+                        class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent font-outfit">
+                        4+</div>
+                    <div class="text-sm font-medium text-slate-400 mt-1">Projects</div>
+                    <div class="text-xs text-slate-600 mt-0.5">Web & Mobile</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div
+                        class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent font-outfit">
+                        2</div>
+                    <div class="text-sm font-medium text-slate-400 mt-1">Homelab</div>
+                    <div class="text-xs text-slate-600 mt-0.5">Self-Hosted</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div
+                        class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent font-outfit">
+                        3+</div>
+                    <div class="text-sm font-medium text-slate-400 mt-1">Years</div>
+                    <div class="text-xs text-slate-600 mt-0.5">Experience</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+            <div class="flex flex-col items-center gap-2 text-slate-500">
+                <span class="text-xs tracking-widest uppercase">Scroll</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="relative py-32 bg-slate-950 overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute top-1/4 right-0 w-1/2 h-1/2 bg-gradient-to-l from-indigo-600/5 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-r from-purple-600/5 to-transparent"></div>
+        </div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <span
+                    class="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-sm font-medium mb-4 border border-indigo-500/20">About
+                    Me</span>
+                <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6 font-outfit">Get To Know <span
+                        class="text-indigo-400">Me</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Profile Image -->
+                <div class="relative" data-aos="fade-right">
+                    <div class="relative aspect-square max-w-auto mx-auto lg:mx-0">
+                        <div
+                            class="absolute -inset-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl opacity-20 blur-2xl">
+                        </div>
+                        <div
+                            class="relative rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 backdrop-blur-sm h-full">
+                            <img src="assets/profil.png" alt="Azhar Muttaqien"
+                                class="w-full h-full object-cover object-[center_20%] transition-all duration-700">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent">
+                            </div>
+                            <div class="absolute bottom-0 left-0 right-0 p-6">
+                                <div class="p-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
+                                    <p class="text-white font-semibold mb-1">Azhar Muttaqien</p>
+                                    <p class="text-slate-300 text-sm">Bandung, Indonesia</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-white/10 backdrop-blur-sm"
+                        data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-start gap-4">
+                            <div class="p-3 rounded-xl bg-indigo-500/20 text-indigo-400">
+                                <i class="fas fa-terminal text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-semibold mb-2">My Philosophy</h3>
+                                <p class="text-slate-400 italic text-sm leading-relaxed">
+                                    "Tumbuh Lebih Baik Dari Hari Kemarin Meski 0.1% sekalipun"
+                                </p>
+                                <p class="text-slate-500 text-xs mt-2">Grow better than yesterday even if it's just 0.1%
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio & Skills -->
+                <div class="space-y-8" data-aos="fade-left">
+                    <div class="space-y-4">
+                        <h3 class="text-2xl font-bold text-white font-outfit">Who am I?</h3>
+                        <p class="text-slate-400 leading-relaxed">
+                            Saya adalah mahasiswa Teknik Informatika di Universitas Pasundan dengan passion dalam
+                            pengembangan web modern dan infrastruktur self-hosting. Saya percaya bahwa teknologi harus
+                            accessible, scalable, dan beautiful.
+                        </p>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div
+                            class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🎓</span>
+                                <div>
+                                    <p class="text-xs text-slate-500 uppercase tracking-wider">Education</p>
+                                    <p
+                                        class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">
+                                        Teknik Informatika - UNPAS</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">📍</span>
+                                <div>
+                                    <p class="text-xs text-slate-500 uppercase tracking-wider">Location</p>
+                                    <p
+                                        class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">
+                                        Bandung, Indonesia</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">💻</span>
+                                <div>
+                                    <p class="text-xs text-slate-500 uppercase tracking-wider">Focus</p>
+                                    <p
+                                        class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">
+                                        Web Dev & Homelab</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🚀</span>
+                                <div>
+                                    <p class="text-xs text-slate-500 uppercase tracking-wider">Status</p>
+                                    <p
+                                        class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">
+                                        Open for Projects</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-4 font-outfit">Tech Stack</h3>
+                        <div id="skills-container" class="space-y-4">
+                            <!-- Skills will be injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="relative py-32 bg-slate-950 overflow-hidden">
+        <div
+            class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-slate-950">
+        </div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <span
+                    class="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 text-purple-400 text-sm font-medium mb-4 border border-purple-500/20">Portfolio</span>
+                <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6 font-outfit">Featured <span
+                        class="text-purple-400">Projects</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full mb-8"></div>
+
+                <!-- Filters -->
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button
+                        class="filter-btn active px-6 py-2.5 rounded-full text-sm font-medium transition-all bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25"
+                        data-filter="all">All Projects</button>
+                    <button
+                        class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition-all bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/10"
+                        data-filter="web">Web Development</button>
+                    <button
+                        class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition-all bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/10"
+                        data-filter="homelab">Homelab</button>
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Projects will be injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="relative py-32 bg-slate-950 overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-[128px]"></div>
+            <div class="absolute top-0 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[128px]"></div>
+        </div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <span
+                    class="inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-4 border border-cyan-500/20">Let's
+                    Connect</span>
+                <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6 font-outfit">Get In <span
+                        class="text-cyan-400">Touch</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>
+                <p class="mt-6 text-slate-400 max-w-2xl mx-auto">
+                    Punya project atau ingin berdiskusi? Jangan ragu untuk menghubungi saya. Saya selalu terbuka untuk
+                    kolaborasi dan opportunity baru.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-5 gap-12">
+                <!-- Contact Info -->
+                <div class="lg:col-span-2 space-y-6" data-aos="fade-right">
+                    <div class="space-y-4" id="social-cards">
+                        <!-- Cards will be injected by JS -->
+                    </div>
+
+                    <!-- Social Icons -->
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <h3 class="text-white font-semibold mb-4">Follow Me</h3>
+                        <div class="flex flex-wrap gap-3" id="social-icons">
+                            <!-- Icons will be injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Availability -->
+                    <div
+                        class="p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+                            <span class="text-emerald-400 font-semibold">Available for Work</span>
+                        </div>
+                        <p class="text-sm text-slate-400">Saat ini saya terbuka untuk freelance projects dan kolaborasi.
+                            Response time: ±24 hours.</p>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-3" data-aos="fade-left">
+                    <form action="https://formspree.io/f/maqleobl" method="POST"
+                        class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm space-y-6">
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium text-slate-400">Your Name</label>
+                                <input type="text" name="name" required
+                                    class="form-input w-full px-4 py-3 rounded-xl bg-slate-900/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                                    placeholder="John Doe">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium text-slate-400">Email Address</label>
+                                <input type="email" name="email" required
+                                    class="form-input w-full px-4 py-3 rounded-xl bg-slate-900/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                                    placeholder="john@example.com">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-slate-400">Subject</label>
+                            <input type="text" name="subject"
+                                class="form-input w-full px-4 py-3 rounded-xl bg-slate-900/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                                placeholder="Project Collaboration">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-slate-400">Message</label>
+                            <textarea name="message" rows="5" required
+                                class="form-input w-full px-4 py-3 rounded-xl bg-slate-900/50 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all resize-none"
+                                placeholder="Tell me about your project..."></textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            Send Message
+                        </button>
+                        <p class="text-center text-xs text-slate-500">Powered by Formspree • Direct to inbox</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative py-12 bg-slate-950 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <h3
+                        class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent font-outfit">
+                        Azhar Muttaqien</h3>
+                    <p class="text-sm text-slate-500 mt-1">Web Developer & Homelab Enthusiast</p>
+                </div>
+                <div class="flex items-center gap-4" id="footer-socials">
+                    <!-- Social links injected by JS -->
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-sm text-slate-500">© <span id="year"></span> All rights reserved.</p>
+                    <p class="text-xs text-slate-600 mt-1">Built with HTML, Tailwind & Vanilla JS</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
