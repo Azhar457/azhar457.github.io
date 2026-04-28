@@ -1,0 +1,203 @@
+:root {
+  /* Dark Theme Colors */
+  --color-background-primary: #0d1117;
+  --color-background-secondary: #161b22;
+  --color-text-primary: #c9d1d9;
+  --color-text-secondary: #8b949e;
+  --color-border-secondary: #30363d;
+  --color-border-tertiary: #21262d;
+  
+  --color-background-info: rgba(56, 139, 253, 0.15);
+  --color-text-info: #58a6ff;
+  
+  --color-background-warning: rgba(210, 153, 34, 0.15);
+  --color-text-warning: #d29922;
+  
+  --color-background-success: rgba(46, 160, 67, 0.15);
+  --color-text-success: #3fb950;
+  
+  --color-background-danger: rgba(248, 81, 73, 0.15);
+  --color-text-danger: #f85149;
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  --border-radius-md: 8px;
+}
+
+body {
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Layout Utilities */
+.roadmap-wrapper {
+  padding: 1rem 0 2rem;
+}
+
+.header-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+/* Common Components */
+.fBtn {
+  transition: all 0.2s ease;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  outline: none;
+}
+
+.fBtn.active {
+  background: var(--color-text-primary) !important;
+  color: var(--color-background-primary) !important;
+}
+
+.fBtn:not(.active):hover {
+  background: var(--color-border-secondary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+#search {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 1.5rem;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+#search:focus {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.3);
+}
+
+#stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+#grid > div {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  background: var(--color-background-primary);
+  border-top: 0.5px solid var(--color-border-tertiary);
+  border-right: 0.5px solid var(--color-border-tertiary);
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  padding: 12px 14px;
+}
+
+#grid > div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  border-color: var(--color-border-secondary);
+}
+
+.tool-link-icon {
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+#grid > div:hover .tool-link-icon {
+  opacity: 1;
+}
+
+#empty {
+  display: none;
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.legend {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 0.5px solid var(--color-border-tertiary);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+}
+
+.pill {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

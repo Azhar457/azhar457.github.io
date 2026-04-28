@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Engineering & Analytics Tools Roadmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2 class="sr-only">Data Engineering & Analytics Tools — Roadmap Belajar Lengkap</h2>
+    
+    <div class="roadmap-wrapper">
+      <div class="header-section">
+        <span class="header-title">// data.pipeline</span>
+        <span class="header-subtitle">— dari SQL sampai real-time streaming platform</span>
+      </div>
+
+      <div class="filter-container" id="filters">
+        <button onclick="filter('all')" data-cat="all" class="fBtn active">semua</button>
+        <button onclick="filter('database')" data-cat="database" class="fBtn">⬡ database</button>
+        <button onclick="filter('orchestration')" data-cat="orchestration" class="fBtn">⬡ orchestration</button>
+        <button onclick="filter('transform')" data-cat="transform" class="fBtn">⬡ transform</button>
+        <button onclick="filter('visualization')" data-cat="visualization" class="fBtn">⬡ visualization</button>
+        <button onclick="filter('quality')" data-cat="quality" class="fBtn">⬡ quality</button>
+        <button onclick="filter('streaming')" data-cat="streaming" class="fBtn">⬡ streaming</button>
+        <button onclick="filter('warning')" data-cat="warning" class="fBtn">⚠ warning zone</button>
+        <button onclick="filter('danger')" data-cat="danger" class="fBtn">☠ danger zone</button>
+      </div>
+
+      <input type="text" id="search" oninput="renderCards()" placeholder="cari tool..." class="search-input">
+
+      <div id="stats" class="stats-container"></div>
+      <div id="grid" class="tools-grid"></div>
+      <div id="empty" class="empty-state" style="display:none;">// no results found</div>
+
+      <div id="legend" class="legend-container">
+        <span class="legend-item">● tingkat kesulitan (1–5)</span>
+        <div class="legend-group">
+          <span class="tag-pill tag-info">ent→os</span>
+          <span class="legend-label">enterprise → opensource</span>
+        </div>
+        <div class="legend-group">
+          <span class="tag-pill tag-warning">powerful</span>
+          <span class="legend-label">tidak viral tapi dahsyat</span>
+        </div>
+        <div class="legend-group">
+          <span class="tag-pill tag-success">apache</span>
+          <span class="legend-label">Apache Software Foundation</span>
+        </div>
+        <div class="legend-group">
+          <span class="tag-pill tag-danger">faang</span>
+          <span class="legend-label">lahir dari big tech</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CATS = {
+      database:      { label: "database",      border: "#378ADD", icon: "⬡" },
+      orchestration: { label: "orchestration", border: "#639922", icon: "⬡" },
+      transform:     { label: "transform",     border: "#BA7517", icon: "⬡" },
+      visualization: { label: "visualization", border: "#7F77DD", icon: "⬡" },
+      quality:       { label: "quality",       border: "#888780", icon: "⬡" },
+      streaming:     { label: "streaming",     border: "#D85A30", icon: "⬡" },
+      warning:       { label: "⚠ warning zone", border: "#E24B4A", icon: "⚠" },
+      danger:        { label: "☠ danger zone",  border: "#A32D2D", icon: "☠" },
+    };
+
+    const TAG_MAP = {
+      "ent→os": "tag-info",
+      "powerful": "tag-warning",
+      "apache": "tag-success",
+      "faang": "tag-danger",
+    };
+
+    const tools = [
+      // database
+      { n: "PostgreSQL", cat: "database", d: 2, url: "https://www.postgresql.org/", desc: "Database relasional paling advanced — JSONB, full-text search, extensible, ACID sempurna", tags: ["powerful"] },
+      { n: "DuckDB", cat: "database", d: 1, url: "https://duckdb.org/", desc: "Analytical database in-process — query CSV/Parquet langsung, zero server, secepat Spark untuk <10GB", tags: ["powerful"] },
+      { n: "MotherDuck", cat: "database", d: 2, url: "https://motherduck.com/", desc: "Cloud data warehouse bertenaga DuckDB — serverless, seamless hybrid execution, sangat powerful untuk analisis cepat", tags: ["powerful"] },
+      { n: "ClickHouse", cat: "database", d: 3, url: "https://clickhouse.com/", desc: "Columnar OLAP dari Yandex — query miliaran baris dalam detik, kompresi ekstrem", tags: ["ent→os", "powerful"] },
+      { n: "TimescaleDB", cat: "database", d: 2, url: "https://www.timescale.com/", desc: "Time-series database di atas PostgreSQL — optimal untuk metrics, IoT, financial data", tags: [] },
+      { n: "Redis", cat: "database", d: 1, url: "https://redis.io/", desc: "In-memory key-value store — caching, pub/sub, rate limiter, session store", tags: [] },
+      { n: "MongoDB", cat: "database", d: 2, url: "https://www.mongodb.com/", desc: "Document database NoSQL — flexible schema, aggregation pipeline, Atlas cloud", tags: ["ent→os"] },
+      { n: "SQLite", cat: "database", d: 1, url: "https://www.sqlite.org/", desc: "Embedded SQL database — single file, zero config, dipakai di setiap smartphone di dunia", tags: ["powerful"] },
+      { n: "MinIO", cat: "database", d: 2, url: "https://min.io/", desc: "S3-compatible object storage self-hosted — data lake layer, lifecycle, versioning", tags: ["ent→os"] },
+
+      // orchestration
+      { n: "Apache Airflow", cat: "orchestration", d: 3, url: "https://airflow.apache.org/", desc: "DAG-based workflow orchestration — scheduling, dependency, retry, alerting, standar industri DE", tags: ["apache", "ent→os"] },
+      { n: "Dagster", cat: "orchestration", d: 2, url: "https://dagster.io/", desc: "Modern data orchestrator — software-defined assets, type checking, built-in lineage", tags: ["powerful"] },
+      { n: "Prefect", cat: "orchestration", d: 2, url: "https://www.prefect.io/", desc: "Workflow automation pythonic — lebih simpel dari Airflow, cloud-native, hybrid execution", tags: [] },
+      { n: "Mage", cat: "orchestration", d: 1, url: "https://www.mage.ai/", desc: "Data pipeline tool dengan notebook-style UI — ELT, streaming, visual debugging", tags: [] },
+      { n: "Luigi", cat: "orchestration", d: 2, url: "https://github.com/spotify/luigi", desc: "Task orchestrator dari Spotify — dependency resolution, central scheduler, Python native", tags: ["faang"] },
+      { n: "Kestra", cat: "orchestration", d: 2, url: "https://kestra.io/", desc: "Event-driven orchestration platform — YAML-based, plugin ecosystem, UI visual editor", tags: [] },
+      { n: "n8n", cat: "orchestration", d: 1, url: "https://n8n.io/", desc: "Low-code workflow automation self-hosted — 400+ integrasi, alternatif Zapier gratis", tags: [] },
+
+      // transform
+      { n: "dbt", cat: "transform", d: 2, url: "https://www.getdbt.com/", desc: "SQL-based transformation — testing, documentation, lineage, version control, modular models", tags: ["powerful"] },
+      { n: "Polars", cat: "transform", d: 2, url: "https://www.pola.rs/", desc: "DataFrame library Rust-powered — 10-100x lebih cepat dari pandas, lazy evaluation, multi-threaded", tags: ["powerful"] },
+      { n: "pandas", cat: "transform", d: 1, url: "https://pandas.pydata.org/", desc: "Python DataFrame standar — manipulasi data tabular, 15+ tahun ecosystem, ubiquitous", tags: [] },
+      { n: "SQLMesh", cat: "transform", d: 2, url: "https://sqlmesh.com/", desc: "dbt alternatif dengan virtual data environments — preview perubahan tanpa materializing", tags: [] },
+      { n: "Apache Spark", cat: "transform", d: 3, url: "https://spark.apache.org/", desc: "Distributed data processing — batch + streaming, DataFrame API, ML pipeline, cluster computing", tags: ["apache", "ent→os"] },
+      { n: "Trino", cat: "transform", d: 3, url: "https://trino.io/", desc: "Distributed SQL query engine — query lintas datasource (S3, PostgreSQL, Kafka) sekaligus", tags: ["ent→os", "faang"] },
+      { n: "Apache Arrow", cat: "transform", d: 3, url: "https://arrow.apache.org/", desc: "Columnar memory format — standar industri untuk data transfer cepat antar bahasa (Python/R/Rust/C++)", tags: ["apache", "powerful"] },
+
+      // visualization
+      { n: "Apache Superset", cat: "visualization", d: 2, url: "https://superset.apache.org/", desc: "BI platform dari Airbnb — dashboard, SQL lab, chart builder, production-ready", tags: ["apache", "ent→os", "faang"] },
+      { n: "Metabase", cat: "visualization", d: 1, url: "https://www.metabase.com/", desc: "BI self-hosted paling mudah — auto-detect schema, pertanyaan natural language, embed dashboard", tags: ["ent→os"] },
+      { n: "Grafana", cat: "visualization", d: 2, url: "https://grafana.com/", desc: "Dashboard multi-datasource — metrics, logs, traces visualization, alerting built-in", tags: ["ent→os"] },
+      { n: "Redash", cat: "visualization", d: 2, url: "https://redash.io/", desc: "Query & visualization tool — multi-database support, scheduled queries, shareable dashboards", tags: ["ent→os"] },
+      { n: "Evidence", cat: "visualization", d: 2, url: "https://evidence.dev/", desc: "BI as code — Markdown + SQL = auto-generated reports, Git-versioned, developer-friendly", tags: ["powerful"] },
+      { n: "Streamlit", cat: "visualization", d: 1, url: "https://streamlit.io/", desc: "Python framework untuk data apps — dari script ke web app interaktif dalam menit", tags: [] },
+
+      // quality
+      { n: "Great Expectations", cat: "quality", d: 2, url: "https://greatexpectations.io/", desc: "Data quality framework — expectations, validation suites, profiling, auto-docs", tags: ["powerful"] },
+      { n: "Soda", cat: "quality", d: 2, url: "https://www.soda.io/", desc: "Data quality checks via SodaCL — scan, alert, integrate dengan pipeline, cloud + OSS", tags: ["ent→os"] },
+      { n: "DataHub", cat: "quality", d: 3, url: "https://datahubproject.io/", desc: "Data catalog & governance dari LinkedIn — metadata, lineage, ownership, search, tag", tags: ["faang", "ent→os"] },
+      { n: "Amundsen", cat: "quality", d: 3, url: "https://www.amundsen.io/", desc: "Data discovery dari Lyft — metadata search, table popularity, lineage, owner tracking", tags: ["faang"] },
+      { n: "OpenMetadata", cat: "quality", d: 2, url: "https://open-metadata.org/", desc: "Unified metadata platform — catalog, lineage, quality, profiler, glossary dalam satu tempat", tags: ["ent→os"] },
+      { n: "Monte Carlo", cat: "quality", d: 3, url: "https://www.montecarlodata.com/", desc: "Data observability — deteksi anomali otomatis, freshness, volume, schema change alerting", tags: ["ent→os"] },
+
+      // streaming
+      { n: "Apache Kafka", cat: "streaming", d: 3, url: "https://kafka.apache.org/", desc: "Distributed event streaming — topic/partition, consumer group, exactly-once, standar industri", tags: ["apache", "ent→os"] },
+      { n: "Redpanda", cat: "streaming", d: 2, url: "https://redpanda.com/", desc: "Kafka-compatible tanpa JVM — single binary C++, lebih cepat, butuh 1/5 resource Kafka", tags: ["powerful"] },
+      { n: "Debezium", cat: "streaming", d: 3, url: "https://debezium.io/", desc: "Change Data Capture — stream perubahan database secara realtime ke Kafka/Redpanda", tags: ["ent→os"] },
+      { n: "Apache Flink", cat: "streaming", d: 3, url: "https://flink.apache.org/", desc: "Stream processing framework — windowing, stateful computation, exactly-once guarantees", tags: ["apache"] },
+      { n: "Benthos", cat: "streaming", d: 2, url: "https://www.benthos.dev/", desc: "Stream processor deklaratif — YAML config, 200+ connectors, transformasi built-in", tags: [] },
+
+      // warning
+      { n: "Delta Lake", cat: "warning", d: 3, url: "https://delta.io/", desc: "ACID transactions di data lake — time travel, schema enforcement, upsert/merge", tags: ["faang", "powerful"] },
+      { n: "Apache Iceberg", cat: "warning", d: 3, url: "https://iceberg.apache.org/", desc: "Open table format — schema evolution, hidden partitioning, snapshot isolation, vendor-neutral", tags: ["apache", "powerful"] },
+      { n: "Apache NiFi", cat: "warning", d: 3, url: "https://nifi.apache.org/", desc: "Data flow automation GUI — awalnya dari NSA, visual data routing, back-pressure handling", tags: ["apache", "ent→os"] },
+      { n: "Databricks", cat: "warning", d: 4, url: "https://www.databricks.com/", desc: "Lakehouse platform — unified batch + streaming, Delta Lake, MLflow, notebook-driven", tags: ["faang", "ent→os"] },
+      { n: "Cube", cat: "warning", d: 3, url: "https://cube.dev/", desc: "Semantic layer for headless BI — API-first, data modeling, caching layer, konsistensi data di semua tools BI", tags: ["powerful"] },
+
+      // danger
+      { n: "Apache Beam", cat: "danger", d: 5, url: "https://beam.apache.org/", desc: "Unified batch + streaming SDK — write once, run on Spark/Flink/Dataflow, Google-originated", tags: ["apache", "faang"] },
+      { n: "StarRocks", cat: "danger", d: 5, url: "https://www.starrocks.io/", desc: "Next-gen OLAP database — secepat ClickHouse tapi dengan support JOIN yang sangat powerful dan fleksibel", tags: ["powerful"] },
+      { n: "Materialize", cat: "danger", d: 5, url: "https://materialize.com/", desc: "Streaming SQL database — incrementally-maintained materialized views, PostgreSQL-compatible", tags: ["powerful"] },
+      { n: "Apache Druid", cat: "danger", d: 5, url: "https://druid.apache.org/", desc: "Real-time OLAP database — sub-second query pada miliaran baris, dipakai Airbnb & Netflix", tags: ["apache", "faang"] },
+      { n: "Apache Pinot", cat: "danger", d: 5, url: "https://pinot.apache.org/", desc: "Real-time distributed OLAP dari LinkedIn — user-facing analytics, low-latency ingestion", tags: ["apache", "faang"] },
+    ];
+
+    let activeCat = 'all';
+
+    function diffDots(d) {
+      const colors = ['', '#888780', '#378ADD', '#7F77DD', '#E24B4A', '#A32D2D'];
+      let s = '';
+      for (let i = 1; i <= 5; i++) {
+        const color = i <= d ? colors[Math.min(d, 5)] : 'var(--color-border-secondary)';
+        s += `<span class="dot" style="color:${color}">●</span>`;
+      }
+      return s;
+    }
+
+    function renderCards() {
+      const q = document.getElementById('search').value.toLowerCase();
+      const list = tools.filter(t => {
+        const catMatch = activeCat === 'all' || t.cat === activeCat;
+        const qMatch = !q || t.n.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || t.tags.some(x => x.includes(q));
+        return catMatch && qMatch;
+      });
+
+      const grid = document.getElementById('grid');
+      const empty = document.getElementById('empty');
+      const stats = document.getElementById('stats');
+
+      if (!list.length) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        stats.innerHTML = '';
+        return;
+      }
+
+      empty.style.display = 'none';
+      const catCounts = {};
+      list.forEach(t => catCounts[t.cat] = (catCounts[t.cat] || 0) + 1);
+
+      stats.innerHTML = `<span class="stats-count">// ${list.length} tools</span>` +
+        Object.entries(catCounts).map(([c, n]) => 
+          `<span class="stats-tag" style="border-color:${CATS[c].border}">${CATS[c].label} ×${n}</span>`
+        ).join('');
+
+      grid.innerHTML = list.map(t => {
+        const c = CATS[t.cat];
+        const isWarn = t.cat === 'warning' || t.cat === 'danger';
+        const cardClass = `tool-card ${t.cat === 'danger' ? 'card-danger' : ''}`;
+        
+        return `
+          <div class="${cardClass}" style="border-left-color: ${c.border}">
+            <div class="card-header">
+              <div class="card-title-wrapper">
+                <span class="card-title ${isWarn ? 'text-danger' : ''}">${t.cat === 'danger' ? '☠ ' : ''}${t.n}</span>
+                ${t.url ? `<a href="${t.url}" target="_blank" class="tool-link" title="Official Website">↗</a>` : ''}
+              </div>
+              <span class="difficulty-dots">${diffDots(t.d)}</span>
+            </div>
+            <p class="card-desc">${t.desc}</p>
+            <div class="tag-container">
+              ${t.tags.map(tag => `<span class="tag-pill ${TAG_MAP[tag] || ''}">${tag}</span>`).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filter(cat) {
+      activeCat = cat;
+      document.querySelectorAll('.fBtn').forEach(b => {
+        if (b.dataset.cat === cat) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+      renderCards();
+    }
+
+    renderCards();
+  </script>
+</body>
+</html>
