@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevOps & Cloud Infrastructure Tools Roadmap</title>
+  <title>DevOps & Cloud Infrastructure Arsenal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="container">
-    <h2 class="sr-only">DevOps & Cloud Infrastructure Tools — Roadmap Belajar Lengkap</h2>
-    
+    <h2 class="sr-only">DevOps & Cloud Infrastructure Tools — Arsenal Belajar Lengkap</h2>
+
     <div class="roadmap-wrapper">
-      <div class="header-section">
-        <span class="header-title">// devops.toolbox</span>
-        <span class="header-subtitle">— dari container sampai cloud-native orchestration</span>
+      <div class="header-row">
+        <span class="header-title">// devops.arsenal</span>
+        <span class="header-subtitle">— dari containerization hingga cloud-native automation</span>
       </div>
 
-      <div class="filter-container" id="filters">
+      <div class="filter-row" id="filters">
         <button onclick="filter('all')" data-cat="all" class="fBtn active">semua</button>
         <button onclick="filter('container')" data-cat="container" class="fBtn">⬡ container</button>
         <button onclick="filter('cicd')" data-cat="cicd" class="fBtn">⬡ CI/CD</button>
@@ -33,42 +37,25 @@
 
       <input type="text" id="search" oninput="renderCards()" placeholder="cari tool..." class="search-input">
 
-      <div id="stats" class="stats-container"></div>
-      <div id="grid" class="tools-grid"></div>
-      <div id="empty" class="empty-state" style="display:none;">// no results found</div>
-
-      <div id="legend" class="legend-container">
-        <span class="legend-item">● tingkat kesulitan (1–5)</span>
-        <div class="legend-group">
-          <span class="tag-pill tag-info">ent→os</span>
-          <span class="legend-label">enterprise → opensource</span>
-        </div>
-        <div class="legend-group">
-          <span class="tag-pill tag-warning">powerful</span>
-          <span class="legend-label">tidak viral tapi dahsyat</span>
-        </div>
-        <div class="legend-group">
-          <span class="tag-pill tag-success">cncf</span>
-          <span class="legend-label">cloud native foundation</span>
-        </div>
-        <div class="legend-group">
-          <span class="tag-pill tag-danger">hashicorp</span>
-          <span class="legend-label">HashiCorp ecosystem</span>
-        </div>
+      <div id="stats"></div>
+      <div id="grid"></div>
+      <div id="empty">
+        // no results found
       </div>
+
     </div>
   </div>
 
   <script>
     const CATS = {
-      container:     { label: "container",     border: "#378ADD", icon: "⬡" },
-      cicd:          { label: "CI/CD",         border: "#639922", icon: "⬡" },
-      iac:           { label: "IaC",           border: "#BA7517", icon: "⬡" },
+      container: { label: "container", border: "#378ADD", icon: "⬡" },
+      cicd: { label: "CI/CD", border: "#639922", icon: "⬡" },
+      iac: { label: "IaC", border: "#BA7517", icon: "⬡" },
       orchestration: { label: "orchestration", border: "#7F77DD", icon: "⬡" },
       observability: { label: "observability", border: "#888780", icon: "⬡" },
-      networking:    { label: "networking",    border: "#D85A30", icon: "⬡" },
-      warning:       { label: "⚠ warning zone", border: "#E24B4A", icon: "⚠" },
-      danger:        { label: "☠ danger zone",  border: "#A32D2D", icon: "☠" },
+      networking: { label: "networking", border: "#D85A30", icon: "⬡" },
+      warning: { label: "⚠ warning zone", border: "#E24B4A", icon: "⚠" },
+      danger: { label: "☠ danger zone", border: "#A32D2D", icon: "☠" },
     };
 
     const TAG_MAP = {
@@ -80,63 +67,53 @@
 
     const tools = [
       // container
-      { n: "Docker", cat: "container", d: 1, url: "https://www.docker.com/", desc: "Container runtime standar industri — Dockerfile, image, volume, network. Fondasi semua DevOps modern", tags: [] },
-      { n: "Docker Compose", cat: "container", d: 1, url: "https://docs.docker.com/compose/", desc: "Multi-container orchestration via YAML — deploy app + DB + cache dalam satu perintah", tags: [] },
-      { n: "Podman", cat: "container", d: 2, url: "https://podman.io/", desc: "Daemonless container engine dari Red Hat — rootless by default, CLI compatible Docker", tags: ["ent→os"] },
-      { n: "Harbor", cat: "container", d: 2, url: "https://goharbor.io/", desc: "Enterprise container registry dengan vulnerability scanning, RBAC, dan replication", tags: ["cncf", "ent→os"] },
-      { n: "Coolify", cat: "container", d: 1, url: "https://coolify.io/", desc: "Self-hosted Heroku/Netlify — gampang banget buat deploy app, database, & services ke VPS sendiri", tags: ["powerful"] },
-      { n: "Trivy", cat: "container", d: 1, url: "https://trivy.dev/", desc: "Security scanner paling komprehensif — scan image, config, & dependency dari vulnerability", tags: ["powerful"] },
-      { n: "Dive", cat: "container", d: 1, url: "https://github.com/wagoodman/dive", desc: "Analisis layer Docker image — temukan bloat, optimasi ukuran image", tags: [] },
+      { n: "Docker", cat: "container", d: 1, url: "https://www.docker.com/", desc: "Standard industri untuk containerization — fondasi utama ekosistem DevOps modern.", tags: [] },
+      { n: "Docker Compose", cat: "container", d: 1, url: "https://docs.docker.com/compose/", desc: "Multi-container orchestration via YAML — deploy stack aplikasi dalam satu perintah.", tags: [] },
+      { n: "Podman", cat: "container", d: 2, url: "https://podman.io/", desc: "Daemonless & rootless container engine — alternatif Docker yang lebih secure dari Red Hat.", tags: ["ent→os"] },
+      { n: "Coolify", cat: "container", d: 1, url: "https://coolify.io/", desc: "Self-hosted Heroku/Netlify — platform paling mudah untuk deploy aplikasi ke VPS sendiri.", tags: ["powerful"] },
+      { n: "Trivy", cat: "container", d: 1, url: "https://trivy.dev/", desc: "Security scanner komprehensif — scan vulnerability pada image, config, dan dependency.", tags: ["cncf", "powerful"] },
 
       // CI/CD
-      { n: "GitHub Actions", cat: "cicd", d: 1, url: "https://github.com/features/actions", desc: "CI/CD native GitHub — workflow YAML, matrix builds, marketplace actions, free untuk public repo", tags: [] },
-      { n: "GitLab CI", cat: "cicd", d: 2, url: "https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/", desc: "CI/CD terintegrasi GitLab — pipeline-as-code, auto DevOps, container registry built-in", tags: ["ent→os"] },
-      { n: "ArgoCD", cat: "cicd", d: 2, url: "https://argoproj.github.io/argo-cd/", desc: "GitOps continuous delivery untuk Kubernetes — deklaratif, auto-sync dari Git repo", tags: ["cncf"] },
-      { n: "Flux", cat: "cicd", d: 2, url: "https://fluxcd.io/", desc: "GitOps toolkit alternatif ArgoCD — lebih modular, native Kubernetes controller", tags: ["cncf"] },
-      { n: "Dagger", cat: "cicd", d: 2, url: "https://dagger.io/", desc: "Portable CI/CD engine — tulis pipeline dalam Go/Python/TypeScript, jalan di mana saja", tags: ["powerful"] },
-      { n: "Act", cat: "cicd", d: 1, url: "https://github.com/nektos/act", desc: "Run GitHub Actions locally — debug workflow tanpa push ke repo", tags: [] },
+      { n: "GitHub Actions", cat: "cicd", d: 1, url: "https://github.com/features/actions", desc: "CI/CD native GitHub — workflow YAML dengan marketplace actions yang sangat luas.", tags: [] },
+      { n: "GitLab CI", cat: "cicd", d: 2, url: "https://about.gitlab.com/", desc: "CI/CD terintegrasi GitLab — pipeline-as-code dengan fitur DevOps yang sangat lengkap.", tags: ["ent→os"] },
+      { n: "ArgoCD", cat: "cicd", d: 2, url: "https://argoproj.github.io/argo-cd/", desc: "GitOps continuous delivery untuk Kubernetes — sinkronisasi otomatis kondisi cluster dari Git.", tags: ["cncf"] },
+      { n: "Dagger", cat: "cicd", d: 2, url: "https://dagger.io/", desc: "Portable CI/CD engine — tulis pipeline dalam bahasa pemrograman nyata, jalan di mana saja.", tags: ["powerful"] },
 
       // IaC
-      { n: "Terraform", cat: "iac", d: 2, url: "https://www.terraform.io/", desc: "Infrastructure as Code deklaratif — multi-cloud provider, state management, modules", tags: ["hashicorp", "ent→os"] },
-      { n: "OpenTofu", cat: "iac", d: 2, url: "https://opentofu.org/", desc: "Fork open-source Terraform oleh Linux Foundation — setelah HashiCorp ubah lisensi BSL", tags: ["ent→os"] },
-      { n: "Ansible", cat: "iac", d: 2, url: "https://www.ansible.com/", desc: "Configuration management agentless — playbook YAML, idempotent, ratusan modules", tags: ["ent→os"] },
-      { n: "Pulumi", cat: "iac", d: 2, url: "https://www.pulumi.com/", desc: "IaC dengan bahasa pemrograman nyata (Python/Go/TS) — bukan HCL, full programming power", tags: ["powerful"] },
-      { n: "LocalStack", cat: "iac", d: 2, url: "https://localstack.cloud/", desc: "Fully functional local AWS cloud stack — dev & test cloud apps secara offline", tags: ["powerful"] },
+      { n: "Terraform", cat: "iac", d: 2, url: "https://www.terraform.io/", desc: "Standard IaC deklaratif — kelola infrastruktur multi-cloud secara konsisten via HCL.", tags: ["hashicorp", "ent→os"] },
+      { n: "OpenTofu", cat: "iac", d: 2, url: "https://opentofu.org/", desc: "Open-source fork of Terraform — community-driven IaC di bawah Linux Foundation.", tags: ["ent→os"] },
+      { n: "Ansible", cat: "iac", d: 2, url: "https://www.ansible.com/", desc: "Configuration management agentless — automasi setup server via playbook YAML yang intuitif.", tags: ["ent→os"] },
+      { n: "Pulumi", cat: "iac", d: 2, url: "https://www.pulumi.com/", desc: "IaC with real programming languages — gunakan Python/Go/TS untuk kelola infrastruktur cloud.", tags: ["powerful"] },
+      { n: "Bunnyshell", cat: "iac", d: 2, url: "https://www.bunnyshell.com/", desc: "Environment-as-Code — buat ephemeral environment untuk testing secara otomatis & cepat.", tags: ["powerful"] },
 
       // orchestration
-      { n: "K3s", cat: "orchestration", d: 2, url: "https://k3s.io/", desc: "Lightweight Kubernetes dari Rancher — ideal homelab, single binary, <512MB RAM", tags: ["cncf"] },
-      { n: "Helm", cat: "orchestration", d: 2, url: "https://helm.sh/", desc: "Package manager Kubernetes — chart templating, versioning, rollback deployment", tags: ["cncf"] },
-      { n: "Kustomize", cat: "orchestration", d: 2, url: "https://kustomize.io/", desc: "Kubernetes native configuration management — overlay tanpa templating engine", tags: ["cncf"] },
-      { n: "k9s", cat: "orchestration", d: 1, url: "https://k9scli.io/", desc: "Terminal UI untuk Kubernetes — navigasi cluster cepat, log, exec, tanpa hafal kubectl", tags: [] },
-      { n: "Lens", cat: "orchestration", d: 1, url: "https://k8slens.dev/", desc: "Kubernetes IDE — GUI untuk manage multi-cluster, monitoring, troubleshooting", tags: [] },
-      { n: "Nomad", cat: "orchestration", d: 3, url: "https://www.nomadproject.io/", desc: "Workload orchestrator dari HashiCorp — bukan cuma container, juga VM, Java, batch jobs", tags: ["hashicorp"] },
+      { n: "K3s", cat: "orchestration", d: 2, url: "https://k3s.io/", desc: "Lightweight Kubernetes — standar emas untuk homelab, edge computing, dan resource terbatas.", tags: ["cncf"] },
+      { n: "Helm", cat: "orchestration", d: 2, url: "https://helm.sh/", desc: "Package manager Kubernetes — permudah deployment aplikasi kompleks via chart templating.", tags: ["cncf"] },
+      { n: "k9s", cat: "orchestration", d: 1, url: "https://k9scli.io/", desc: "Terminal UI untuk Kubernetes — navigasi cluster kilat tanpa harus hafal banyak kubectl command.", tags: [] },
+      { n: "Nomad", cat: "orchestration", d: 3, url: "https://www.nomadproject.io/", desc: "Flexible workload orchestrator — alternatif K8s yang lebih simpel untuk container & VM.", tags: ["hashicorp"] },
 
       // observability
-      { n: "Prometheus", cat: "observability", d: 2, url: "https://prometheus.io/", desc: "Metrics collection & alerting — pull-based scraping, PromQL, recording rules", tags: ["cncf", "ent→os"] },
-      { n: "Grafana", cat: "observability", d: 2, url: "https://grafana.com/", desc: "Visualization & dashboarding — multi-datasource, alerting, annotation, templating", tags: ["ent→os"] },
-      { n: "Loki", cat: "observability", d: 2, url: "https://grafana.com/oss/loki/", desc: "Log aggregation dari Grafana Labs — label-based, lightweight, terintegrasi Grafana", tags: ["ent→os"] },
-      { n: "OpenTelemetry", cat: "observability", d: 3, url: "https://opentelemetry.io/", desc: "Unified observability framework — traces, metrics, logs dalam satu SDK & collector", tags: ["cncf", "powerful"] },
-      { n: "Netdata", cat: "observability", d: 1, url: "https://www.netdata.cloud/", desc: "Real-time monitoring zero-config — 1 command install, 2000+ metrics out-of-the-box", tags: [] },
-      { n: "Uptime Kuma", cat: "observability", d: 1, url: "https://github.com/louislam/uptime-kuma", desc: "Self-hosted uptime monitoring & status page — push/pull check, notification multi-channel", tags: [] },
+      { n: "Prometheus", cat: "observability", d: 2, url: "https://prometheus.io/", desc: "Standard monitoring & alerting — pull-based metrics collection dengan PromQL yang powerful.", tags: ["cncf", "ent→os"] },
+      { n: "Grafana", cat: "observability", d: 2, url: "https://grafana.com/", desc: "The open observability platform — visualisasi metrics, logs, dan traces dalam dashboard cantik.", tags: ["ent→os"] },
+      { n: "OpenObserve", cat: "observability", d: 2, url: "https://openobserve.ai/", desc: "Observability platform 10x lebih hemat — alternatif ELK/Splunk yang sangat ringan & cepat.", tags: ["powerful"] },
+      { n: "OpenTelemetry", cat: "observability", d: 3, url: "https://opentelemetry.io/", desc: "Unified observability framework — standard SDK untuk koleksi data traces, metrics, dan logs.", tags: ["cncf", "powerful"] },
+      { n: "Uptime Kuma", cat: "observability", d: 1, url: "https://github.com/louislam/uptime-kuma", desc: "Self-hosted status page — monitoring uptime service dengan notifikasi multi-channel.", tags: ["powerful"] },
 
       // networking
-      { n: "Nginx", cat: "networking", d: 2, url: "https://www.nginx.com/", desc: "Web server & reverse proxy — load balancing, SSL termination, caching, rate limiting", tags: ["ent→os"] },
-      { n: "Traefik", cat: "networking", d: 2, url: "https://traefik.io/", desc: "Cloud-native reverse proxy — auto-discovery container, Let's Encrypt otomatis, middleware", tags: ["powerful"] },
-      { n: "Tailscale", cat: "networking", d: 1, url: "https://tailscale.com/", desc: "Zero config VPN — bangun mesh network antar server/device dalam hitungan menit", tags: ["powerful"] },
-      { n: "Caddy", cat: "networking", d: 1, url: "https://caddyserver.com/", desc: "Web server dengan automatic HTTPS — zero-config TLS, Caddyfile sederhana", tags: [] },
-      { n: "cert-manager", cat: "networking", d: 2, url: "https://cert-manager.io/", desc: "Automated TLS certificate management di Kubernetes — Let's Encrypt, Vault PKI", tags: ["cncf"] },
+      { n: "Nginx Proxy Manager", cat: "networking", d: 1, url: "https://nginxproxymanager.com/", desc: "GUI untuk Nginx — kelola reverse proxy, SSL (Let's Encrypt), dan host dengan sangat mudah.", tags: ["powerful"] },
+      { n: "Traefik", cat: "networking", d: 2, url: "https://traefik.io/", desc: "Cloud-native reverse proxy — auto-discovery container dengan integrasi K8s & Docker yang seamless.", tags: ["powerful"] },
+      { n: "Tailscale", cat: "networking", d: 1, url: "https://tailscale.com/", desc: "Zero-config Mesh VPN — hubungkan server dan device di mana saja secara aman dalam hitungan menit.", tags: ["powerful"] },
+      { n: "Caddy", cat: "networking", d: 1, url: "https://caddyserver.com/", desc: "Web server modern — automatic HTTPS secara default dengan konfigurasi Caddyfile yang simpel.", tags: [] },
 
       // warning
-      { n: "Vault", cat: "warning", d: 3, url: "https://www.vaultproject.io/", desc: "Secrets management — dynamic credentials, PKI, encryption as service, audit trail", tags: ["hashicorp"] },
-      { n: "Istio", cat: "warning", d: 4, url: "https://istio.io/", desc: "Service mesh — mTLS antar service, traffic management, observability, canary deployment", tags: ["cncf", "ent→os"] },
-      { n: "Ceph", cat: "warning", d: 4, url: "https://ceph.io/", desc: "Distributed storage — object, block, file dalam satu platform terdistribusi", tags: ["ent→os"] },
-      { n: "Consul", cat: "warning", d: 3, url: "https://www.consul.io/", desc: "Service discovery & mesh — health checking, KV store, multi-datacenter", tags: ["hashicorp"] },
+      { n: "Vault", cat: "warning", d: 3, url: "https://www.vaultproject.io/", desc: "Secrets management — kelola password, API keys, dan sertifikat secara aman & terpusat.", tags: ["hashicorp"] },
+      { n: "Istio", cat: "warning", d: 4, url: "https://istio.io/", desc: "Service mesh — mTLS, traffic management, dan observability tingkat tinggi antar microservices.", tags: ["cncf", "ent→os"] },
+      { n: "KubeScape", cat: "warning", d: 3, url: "https://kubescape.io/", desc: "K8s security platform — scan cluster untuk miskonfigurasi berdasarkan framework NSA & MITRE.", tags: ["cncf", "powerful"] },
 
       // danger
-      { n: "Cilium", cat: "danger", d: 5, url: "https://cilium.io/", desc: "eBPF-based networking & security untuk K8s — next-gen CNI, bypass iptables, kernel-level", tags: ["cncf", "powerful"] },
-      { n: "Crossplane", cat: "danger", d: 5, url: "https://www.crossplane.io/", desc: "Universal control plane — manage cloud resources (AWS/GCP/Azure) via Kubernetes CRD", tags: ["cncf"] },
-      { n: "SPIRE", cat: "danger", d: 5, url: "https://spiffe.io/", desc: "Workload identity framework — zero-trust mutual authentication tanpa secrets berbasis SPIFFE", tags: ["cncf"] },
-      { n: "Vitess", cat: "danger", d: 5, url: "https://vitess.io/", desc: "Horizontal MySQL sharding — lahir dari YouTube, skala miliaran query/hari", tags: ["cncf", "ent→os"] },
+      { n: "Cilium", cat: "danger", d: 5, url: "https://cilium.io/", desc: "eBPF-based networking & security — CNI tercanggih untuk K8s dengan performance level kernel.", tags: ["cncf", "powerful"] },
+      { n: "Falco", cat: "danger", d: 5, url: "https://falco.org/", desc: "Cloud-native runtime security — deteksi aktivitas mencurigakan di level sistem secara real-time.", tags: ["cncf", "powerful"] },
+      { n: "SPIRE", cat: "danger", d: 5, url: "https://spiffe.io/", desc: "Workload identity framework — identitas otomatis untuk service dalam ekosistem zero-trust.", tags: ["cncf"] },
     ];
 
     let activeCat = 'all';
@@ -146,7 +123,7 @@
       let s = '';
       for (let i = 1; i <= 5; i++) {
         const color = i <= d ? colors[Math.min(d, 5)] : 'var(--color-border-secondary)';
-        s += `<span class="dot" style="color:${color}">●</span>`;
+        s += `<span style="color:${color};">●</span>`;
       }
       return s;
     }
@@ -155,7 +132,7 @@
       const q = document.getElementById('search').value.toLowerCase();
       const list = tools.filter(t => {
         const catMatch = activeCat === 'all' || t.cat === activeCat;
-        const qMatch = !q || t.n.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || t.tags.some(x => x.includes(q));
+        const qMatch = !q || t.n.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || (t.tags && t.tags.some(x => x.includes(q)));
         return catMatch && qMatch;
       });
 
@@ -175,27 +152,26 @@
       list.forEach(t => catCounts[t.cat] = (catCounts[t.cat] || 0) + 1);
 
       stats.innerHTML = `<span class="stats-count">// ${list.length} tools</span>` +
-        Object.entries(catCounts).map(([c, n]) => 
+        Object.entries(catCounts).map(([c, n]) =>
           `<span class="stats-tag" style="border-color:${CATS[c].border}">${CATS[c].label} ×${n}</span>`
         ).join('');
 
       grid.innerHTML = list.map(t => {
         const c = CATS[t.cat];
         const isWarn = t.cat === 'warning' || t.cat === 'danger';
-        const cardClass = `tool-card ${t.cat === 'danger' ? 'card-danger' : ''}`;
-        
+
         return `
-          <div class="${cardClass}" style="border-left-color: ${c.border}">
+          <div class="tool-card" onclick="window.open('${t.url}', '_blank')" style="border-left-color: ${c.border}">
             <div class="card-header">
               <div class="card-title-wrapper">
                 <span class="card-title ${isWarn ? 'text-danger' : ''}">${t.cat === 'danger' ? '☠ ' : ''}${t.n}</span>
-                ${t.url ? `<a href="${t.url}" target="_blank" class="tool-link" title="Official Website">↗</a>` : ''}
+                <svg class="tool-link-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
               </div>
-              <span class="difficulty-dots">${diffDots(t.d)}</span>
+              <span style="font-size:12px;letter-spacing:1px;white-space:nowrap;">${diffDots(t.d)}</span>
             </div>
             <p class="card-desc">${t.desc}</p>
             <div class="tag-container">
-              ${t.tags.map(tag => `<span class="tag-pill ${TAG_MAP[tag] || ''}">${tag}</span>`).join('')}
+              ${t.tags.map(tag => `<span class="tag-pill ${TAG_MAP[tag] || 'tag-default'}">${tag}</span>`).join('')}
             </div>
           </div>
         `;
@@ -214,7 +190,29 @@
       renderCards();
     }
 
+    const legend = `<div class="legend">
+      <span class="legend-item">● tingkat kesulitan (1–5)</span>
+      <div class="legend-group">
+        <span class="tag-pill tag-info">ent→os</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">enterprise → opensource</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-warning">powerful</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">tidak viral tapi dahsyat</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-success">cncf</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">cloud native foundation</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-danger">hashicorp</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">HashiCorp ecosystem</span>
+      </div>
+    </div>`;
+    document.querySelector('.roadmap-wrapper').insertAdjacentHTML('beforeend', legend);
+
     renderCards();
   </script>
 </body>
+
 </html>
