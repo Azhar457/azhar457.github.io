@@ -154,7 +154,7 @@
 
       stats.innerHTML = `<span class="stats-count">// ${list.length} tools</span>` +
         Object.entries(catCounts).map(([c, n]) =>
-          `<span class="stats-tag" style="border-color:${CATS[c].border}">${CATS[c].label} ×${n}</span>`
+          `<span class="stats-tag" style="border-color:${CATS[c].border}; color:${CATS[c].border}; background: ${CATS[c].border}15">${CATS[c].label} ×${n}</span>`
         ).join('');
 
       grid.innerHTML = list.map(t => {
@@ -165,7 +165,8 @@
           <div class="tool-card" onclick="window.open('${t.url}', '_blank')" style="border-left-color: ${c.border}">
             <div class="card-header">
               <div class="card-title-wrapper">
-                <span class="card-title ${isWarn ? 'text-danger' : ''}">${t.cat === 'danger' ? '☠ ' : ''}${t.n}</span>
+                <span style="color:${c.border}; font-size:14px;">${c.icon}</span>
+                <span class="card-title ${isWarn ? 'text-danger' : ''}">${t.n}</span>
                 <svg class="tool-link-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
               </div>
               <span style="font-size:12px;letter-spacing:1px;white-space:nowrap;">${diffDots(t.d)}</span>
@@ -182,14 +183,27 @@
     function filter(cat) {
       activeCat = cat;
       document.querySelectorAll('.fBtn').forEach(b => {
-        if (b.dataset.cat === cat) {
+        const bCat = b.dataset.cat;
+        if (bCat === cat) {
           b.classList.add('active');
+          if (bCat !== 'all') b.style.borderColor = CATS[bCat].border;
         } else {
           b.classList.remove('active');
+          if (bCat !== 'all') b.style.borderColor = 'var(--color-border-secondary)';
         }
       });
       renderCards();
     }
+
+    // Initialize button colors
+    document.querySelectorAll('.fBtn').forEach(b => {
+      const bCat = b.dataset.cat;
+      if (bCat !== 'all') {
+        b.style.color = CATS[bCat].border;
+        b.addEventListener('mouseenter', () => { if(!b.classList.contains('active')) b.style.background = CATS[bCat].border + '20'; });
+        b.addEventListener('mouseleave', () => { if(!b.classList.contains('active')) b.style.background = 'var(--color-background-secondary)'; });
+      }
+    });
 
     const legend = `<div class="legend">
       <span class="legend-item">● tingkat kesulitan (1–5)</span>
