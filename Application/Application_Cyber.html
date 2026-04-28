@@ -30,6 +30,7 @@
         <button onclick="filter('identitas')" data-cat="identitas" class="fBtn">⬡ identitas</button>
         <button onclick="filter('keamanan')" data-cat="keamanan" class="fBtn">⬡ keamanan</button>
         <button onclick="filter('monitoring')" data-cat="monitoring" class="fBtn">⬡ monitoring</button>
+        <button onclick="filter('data')" data-cat="data" class="fBtn">⬡ data & storage</button>
         <button onclick="filter('warning')" data-cat="warning" class="fBtn">⚠ warning zone</button>
         <button onclick="filter('danger')" data-cat="danger" class="fBtn">☠ danger zone</button>
       </div>
@@ -45,6 +46,7 @@
     </div>
   </div>
 
+  <script src="arsenal.js"></script>
   <script>
     const CATS = {
       fondasi: { label: "fondasi", border: "#888780", icon: "⬡" },
@@ -52,6 +54,7 @@
       identitas: { label: "identitas", border: "#7F77DD", icon: "⬡" },
       keamanan: { label: "keamanan", border: "#D85A30", icon: "⬡" },
       monitoring: { label: "monitoring", border: "#639922", icon: "⬡" },
+      data: { label: "data & storage", border: "#BA7517", icon: "⬡" },
       warning: { label: "⚠ warning zone", border: "#E24B4A", icon: "⚠" },
       danger: { label: "☠ danger zone", border: "#A32D2D", icon: "☠" },
     };
@@ -64,136 +67,71 @@
     };
 
     const tools = [
-      // fondasi
-      { n: "NixOS", cat: "fondasi", d: 2, url: "https://nixos.org/", desc: "OS deklaratif — seluruh sistem dikonfigurasi via satu file reproducible. Kebal dari konfigurasi yang berantakan.", tags: ["powerful"] },
-      { n: "Proxmox VE", cat: "fondasi", d: 1, url: "https://www.proxmox.com/", desc: "Hypervisor tipe-1 gratis untuk VM & LXC container — standar emas untuk homelab & server lokal.", tags: ["ent→os"] },
-      { n: "Portainer", cat: "fondasi", d: 1, url: "https://www.portainer.io/", desc: "GUI management Docker & Kubernetes — navigasi container jadi gampang tanpa harus hafal command CLI.", tags: [] },
-      { n: "Vaultwarden", cat: "fondasi", d: 1, url: "https://github.com/dani-garcia/vaultwarden", desc: "Server Bitwarden self-hosted — password manager penuh fitur, sangat ringan, dan aman untuk data pribadi.", tags: ["powerful"] },
-      { n: "Immich", cat: "fondasi", d: 1, url: "https://immich.app/", desc: "Self-hosted Google Photos — backup foto/video otomatis dengan fitur AI recognition untuk wajah & objek.", tags: ["powerful"] },
-
-      // jaringan
-      { n: "OPNsense", cat: "jaringan", d: 2, url: "https://opnsense.org/", desc: "Firewall & router OS berbasis FreeBSD — fitur enterprise: IDS, VPN, traffic shaping, & web filtering.", tags: ["ent→os"] },
-      { n: "Tailscale", cat: "jaringan", d: 1, url: "https://tailscale.com/", desc: "Zero config VPN — bangun mesh network antar device dalam hitungan menit tanpa buka port (NAT traversal).", tags: ["powerful"] },
-      { n: "Headscale", cat: "jaringan", d: 3, url: "https://github.com/juanfont/headscale", desc: "Self-hosted Tailscale control server — buat yang mau privasi total tanpa lewat server Tailscale.", tags: ["powerful"] },
-      { n: "AdGuard Home", cat: "jaringan", d: 1, url: "https://adguard.com/adguard-home.html", desc: "Network-wide ads & tracker blocker — bersihkan semua iklan di semua device lewat DNS.", tags: [] },
-      { n: "Netbird", cat: "jaringan", d: 2, url: "https://netbird.io/", desc: "Zero-trust overlay network full self-hosted — mesh VPN dengan akses kontrol yang sangat granular.", tags: ["ent→os"] },
-
-      // identitas
-      { n: "Authentik", cat: "identitas", d: 2, url: "https://goauthentik.io/", desc: "Identity Provider modern — SSO, OAuth2, SAML, LDAP, & flow login kustom dalam satu dashboard.", tags: ["ent→os", "powerful"] },
-      { n: "Keycloak", cat: "identitas", d: 3, url: "https://www.keycloak.org/", desc: "IAM enterprise dari Red Hat — paling mature & stabil untuk autentikasi terpusat aplikasi besar.", tags: ["ent→os"] },
-      { n: "Authelia", cat: "identitas", d: 2, url: "https://www.authelia.com/", desc: "Portal 2FA & SSO yang sangat ringan — cocok banget disandingkan dengan Nginx atau Traefik.", tags: [] },
-
-      // keamanan
-      { n: "CrowdSec", cat: "keamanan", d: 2, url: "https://www.crowdsec.net/", desc: "Collaborative IPS — deteksi & blokir IP berbahaya secara otomatis berdasarkan data komunitas global.", tags: ["powerful"] },
-      { n: "Wazuh", cat: "keamanan", d: 3, url: "https://wazuh.com/", desc: "The Open Source Security Platform — EDR, SIEM, & compliance monitoring lengkap untuk server & endpoint.", tags: ["ent→os", "powerful"] },
-      { n: "Gitleaks", cat: "keamanan", d: 1, url: "https://github.com/gitleaks/gitleaks", desc: "Secret scanning tool — scan repository untuk cari password, API key, atau token yang tidak sengaja ter-commit.", tags: ["powerful"] },
-      { n: "DefectDojo", cat: "keamanan", d: 3, url: "https://www.defectdojo.org/", desc: "Vulnerability Management tool — orchestrate semua hasil scan security ke dalam satu dashboard terpusat.", tags: ["ent→os"] },
-      { n: "Trivy", cat: "keamanan", d: 1, url: "https://trivy.dev/", desc: "Security scanner paling komprehensif — scan image, config, & dependency dari vulnerability.", tags: ["cncf", "powerful"] },
-      { n: "Lynis", cat: "keamanan", d: 1, url: "https://cisofy.com/lynis/", desc: "Security auditing tool untuk Linux — cek hardening OS & dapatkan rekomendasi security otomatis.", tags: [] },
-
-      // monitoring
-      { n: "Uptime Kuma", cat: "monitoring", d: 1, url: "https://github.com/louislam/uptime-kuma", desc: "Self-hosted status page — monitoring website, service, & port dengan notifikasi multi-channel.", tags: ["powerful"] },
-      { n: "Netdata", cat: "monitoring", d: 1, url: "https://www.netdata.cloud/", desc: "Real-time monitoring zero-config — install satu command, langsung lihat ribuan metrics dashboard server.", tags: [] },
-      { n: "Zabbix", cat: "monitoring", d: 3, url: "https://www.zabbix.com/", desc: "Enterprise monitoring legendaris — sangat fleksibel untuk monitoring jaringan, server, & IoT.", tags: ["ent→os"] },
-
-      // warning
-      { n: "SELinux", cat: "warning", d: 4, url: "https://github.com/SELinuxProject", desc: "Mandatory Access Control — keamanan level kernel militer (NSA) yang bikin hacker garuk kepala.", tags: ["nsa"] },
-      { n: "Kubernetes 'Hard Way'", cat: "warning", d: 4, url: "https://github.com/kelseyhightower/kubernetes-the-hard-way", desc: "Setup K8s tanpa automasi — pahami cara kerja certificate, etcd, & control plane secara mendalam.", tags: ["cncf"] },
-      { n: "OpenVAS", cat: "warning", d: 3, url: "https://www.openvas.org/", desc: "Vulnerability scanner paling populer — scan kelemahan network sebelum hacker yang nemuin.", tags: ["ent→os"] },
-
-      // danger
-      { n: "Cilium", cat: "danger", d: 5, url: "https://cilium.io/", desc: "eBPF-based networking & security — CNI tercanggih untuk Kubernetes dengan policy security level kernel.", tags: ["cncf", "powerful"] },
-      { n: "Ghidra", cat: "danger", d: 5, url: "https://ghidra-sre.org/", desc: "Reverse Engineering suite dari NSA — bedah malware & biner program sampai ke akarnya.", tags: ["nsa", "powerful"] },
-      { n: "PC-3000", cat: "danger", d: 5, url: "https://www.acelab.eu.com/pc3000.php", desc: "The King of Data Recovery — tool hardware lab untuk perbaiki firmware & ambil data dari disk mati.", tags: ["powerful"] },
+      { n: "NixOS", cat: "fondasi", d: 2, url: "https://nixos.org/", desc: "OS deklaratif — seluruh sistem dikonfigurasi via satu file reproducible", tags: ["powerful"] },
+      { n: "Proxmox VE", cat: "fondasi", d: 1, url: "https://www.proxmox.com/", desc: "Hypervisor tipe-1 gratis untuk VM & LXC container — standar homelab", tags: ["ent→os"] },
+      { n: "TrueNAS SCALE", cat: "fondasi", d: 1, url: "https://www.truenas.com/truenas-scale/", desc: "NAS OS berbasis Linux dengan ZFS, cocok untuk penyimpanan data jangka panjang", tags: ["ent→os"] },
+      { n: "Portainer", cat: "fondasi", d: 1, url: "https://www.portainer.io/", desc: "GUI management Docker & Kubernetes — cocok untuk mulai tanpa hafal CLI", tags: [] },
+      { n: "Traefik", cat: "fondasi", d: 2, url: "https://traefik.io/", desc: "Reverse proxy modern dengan auto-discovery container & otomasi TLS", tags: ["powerful"] },
+      { n: "Nginx Proxy Manager", cat: "fondasi", d: 1, url: "https://nginxproxymanager.com/", desc: "Reverse proxy berbasis Nginx dengan GUI simpel — alternatif Traefik yang lebih mudah", tags: [] },
+      { n: "Vaultwarden", cat: "fondasi", d: 1, url: "https://github.com/dani-garcia/vaultwarden", desc: "Server Bitwarden self-hosted — password manager penuh fitur, hemat resource", tags: [] },
+      { n: "Forgejo", cat: "fondasi", d: 1, url: "https://forgejo.org/", desc: "Self-hosted Git platform — fork community dari Gitea, bebas vendor lock-in", tags: [] },
+      { n: "Nextcloud", cat: "fondasi", d: 1, url: "https://nextcloud.com/", desc: "Private cloud: file sync, kalender, kontak, office suite — alternatif Google Workspace", tags: ["ent→os"] },
+      { n: "Immich", cat: "fondasi", d: 1, url: "https://immich.app/", desc: "Self-hosted Google Photos — backup foto/video otomatis dengan AI recognition", tags: [] },
+      { n: "Paperless-ngx", cat: "fondasi", d: 1, url: "https://docs.paperless-ngx.com/", desc: "Document management dengan OCR & auto-tagging — arsip digital tanpa kertas", tags: [] },
+      { n: "Headscale", cat: "jaringan", d: 2, url: "https://github.com/juanfont/headscale", desc: "Self-hosted Tailscale control server — VPN mesh zero-config antar device manapun", tags: [] },
+      { n: "OPNsense", cat: "jaringan", d: 2, url: "https://opnsense.org/", desc: "Firewall & router OS berbasis FreeBSD — fitur enterprise: IDS, VPN, traffic shaping", tags: ["ent→os"] },
+      { n: "WireGuard", cat: "jaringan", d: 2, url: "https://www.wireguard.com/", desc: "VPN protocol modern — kode minimal, kriptografi kuat, performa tinggi", tags: ["powerful"] },
+      { n: "Netbird", cat: "jaringan", d: 2, url: "https://netbird.io/", desc: "Zero-trust overlay network full self-hosted — seperti Tailscale tapi kontrol penuh", tags: [] },
+      { n: "Cosmos Cloud", cat: "jaringan", d: 1, url: "https://cosmos-cloud.io/", desc: "Homelab gateway all-in-one: reverse proxy + SSO + app store container", tags: [] },
+      { n: "Authentik", cat: "identitas", d: 2, url: "https://goauthentik.io/", desc: "Identity Provider modern — SSO, OAuth2, SAML, LDAP, SCIM dalam satu platform", tags: ["ent→os"] },
+      { n: "Keycloak", cat: "identitas", d: 3, url: "https://www.keycloak.org/", desc: "IAM enterprise dari Red Hat — paling mature & production-ready untuk autentikasi terpusat", tags: ["ent→os"] },
+      { n: "HashiCorp Vault", cat: "identitas", d: 3, url: "https://www.vaultproject.io/", desc: "Secrets management — enkripsi, PKI, dynamic credentials, audit log", tags: ["ent→os"] },
+      { n: "Kasm Workspaces", cat: "identitas", d: 2, url: "https://www.kasmweb.com/", desc: "Browser & desktop streaming via container — workspace terisolasi untuk keamanan", tags: [] },
+      { n: "CrowdSec", cat: "keamanan", d: 2, url: "https://www.crowdsec.net/", desc: "Collaborative IPS — blokir IP berbahaya secara komunal berdasarkan threat intel global", tags: [] },
+      { n: "Suricata", cat: "keamanan", d: 3, url: "https://suricata.io/", desc: "IDS/IPS network bertenaga — deteksi intrusi berbasis rules, protocol & ML", tags: ["ent→os", "powerful"] },
+      { n: "Zeek", cat: "keamanan", d: 3, url: "https://zeek.org/", desc: "Network security monitor — analisis traffic mendalam, dipakai di riset & enterprise", tags: ["powerful"] },
+      { n: "OpenVAS / Greenbone", cat: "keamanan", d: 2, url: "https://www.openvas.org/", desc: "Vulnerability scanner — audit kelemahan infrastruktur sendiri sebelum attacker", tags: ["ent→os"] },
+      { n: "Falco", cat: "keamanan", d: 3, url: "https://falco.org/", desc: "Runtime security container — deteksi anomali realtime via eBPF di kernel level", tags: ["cncf", "ent→os"] },
+      { n: "Trivy", cat: "keamanan", d: 1, url: "https://trivy.dev/", desc: "Scanner CVE untuk container image, repo Git, Terraform, Kubernetes manifest", tags: ["cncf"] },
+      { n: "TheHive + MISP", cat: "keamanan", d: 3, url: "https://thehive-project.org/", desc: "Platform SOC lengkap: case management + threat intelligence sharing komunitas global", tags: ["ent→os"] },
+      { n: "Lynis", cat: "keamanan", d: 1, url: "https://cisofy.com/lynis/", desc: "Security auditing tool untuk Linux — skor hardening & rekomendasi otomatis", tags: [] },
+      { n: "Semgrep", cat: "keamanan", d: 2, url: "https://semgrep.dev/", desc: "SAST (Static Analysis) — temukan bug keamanan di kode sebelum deploy", tags: [] },
+      { n: "Uptime Kuma", cat: "monitoring", d: 1, url: "https://github.com/louislam/uptime-kuma", desc: "Self-hosted uptime monitoring & status page — alternatif UptimeRobot", tags: [] },
+      { n: "Grafana + Prometheus", cat: "monitoring", d: 2, url: "https://grafana.com/", desc: "Stack monitoring standar industri — metrics scraping, alerting, & dashboard kelas enterprise", tags: ["ent→os"] },
+      { n: "Loki", cat: "monitoring", d: 2, url: "https://grafana.com/oss/loki/", desc: "Log aggregation dari Grafana Labs — lebih ringan dari Elasticsearch, terintegrasi Grafana", tags: ["ent→os"] },
+      { n: "Netdata", cat: "monitoring", d: 1, url: "https://www.netdata.cloud/", desc: "Real-time monitoring dengan zero konfigurasi — 1 command install, langsung jalan", tags: [] },
+      { n: "Gotify", cat: "monitoring", d: 1, url: "https://gotify.net/", desc: "Self-hosted push notification server — kirim alert dari server ke device", tags: [] },
+      { n: "Diun", cat: "monitoring", d: 1, url: "https://github.com/crazy-max/diun", desc: "Docker Image Update Notifier — alert otomatis saat image baru tersedia", tags: [] },
+      { n: "OpenTelemetry", cat: "monitoring", d: 3, url: "https://opentelemetry.io/", desc: "Framework observability universal — traces, metrics, logs dalam satu standar (CNCF)", tags: ["cncf"] },
+      { n: "MinIO", cat: "data", d: 2, url: "https://min.io/", desc: "Object storage S3-compatible self-hosted — performa enterprise, dipakai di Fortune 500", tags: ["ent→os"] },
+      { n: "BorgBackup", cat: "data", d: 2, url: "https://www.borgbackup.org/", desc: "Backup with deduplication & encryption — efficient storage for large data", tags: [] },
+      { n: "ClickHouse", cat: "data", d: 3, url: "https://clickhouse.com/", desc: "OLAP database columnar ultra-cepat dari Yandex — query miliaran baris dalam detik", tags: ["ent→os", "powerful"] },
+      { n: "TimescaleDB", cat: "data", d: 2, url: "https://www.timescale.com/", desc: "Time-series database berbasis PostgreSQL — optimal untuk metrics & IoT data", tags: [] },
+      { n: "Apache Superset", cat: "data", d: 2, url: "https://superset.apache.org/", desc: "BI & data visualization platform — dari Airbnb, dipakai di production skala besar", tags: ["ent→os"] },
+      { n: "Debezium", cat: "data", d: 3, url: "https://debezium.io/", desc: "Change Data Capture (CDC) dari Red Hat — stream perubahan database realtime ke Kafka", tags: ["ent→os"] },
+      { n: "Apache NiFi", cat: "data", d: 3, url: "https://nifi.apache.org/", desc: "Data flow automation dengan GUI — awalnya dikembangkan oleh NSA untuk data ingestion", tags: ["ent→os", "nsa", "powerful"] },
+      { n: "Trino", cat: "data", d: 3, url: "https://trino.io/", desc: "Distributed SQL query engine — query lintas datasource sekaligus, ex-Facebook (Presto)", tags: ["ent→os"] },
+      { n: "dbt (data build tool)", cat: "data", d: 2, url: "https://www.getdbt.com/", desc: "Transform data di dalam warehouse — SQL-based, version control, testing otomatis", tags: [] },
+      { n: "OpenStack", cat: "warning", d: 4, url: "https://www.openstack.org/", desc: "Private cloud infrastructure — bangun AWS sendiri dari nol, belajar cloud sesungguhnya", tags: ["ent→os"] },
+      { n: "Kubernetes 'The Hard Way'", cat: "warning", d: 4, url: "https://github.com/kelseyhightower/kubernetes-the-hard-way", desc: "Setup K8s manual tanpa automasi — pahami setiap komponen, certificate, & etcd cluster", tags: ["cncf"] },
+      { n: "Ceph", cat: "warning", d: 4, url: "https://ceph.io/", desc: "Distributed storage platform — object, block, dan file dalam satu sistem terdistribusi", tags: ["ent→os"] },
+      { n: "Wazuh / ELK Stack", cat: "warning", d: 4, url: "https://wazuh.com/", desc: "SIEM & security analytics — visibilitas penuh: log, alerts, compliance, threat hunting", tags: ["ent→os"] },
+      { n: "SELinux", cat: "warning", d: 4, url: "https://github.com/SELinuxProject", desc: "Mandatory Access Control di kernel Linux — dikembangkan NSA, keamanan level militer", tags: ["nsa"] },
+      { n: "eBPF", cat: "warning", d: 4, url: "https://ebpf.io/", desc: "Program kernel Linux tanpa modifikasi — networking, security, tracing, performa profiling", tags: ["powerful"] },
+      { n: "Ansible / Terraform", cat: "warning", d: 3, url: "https://www.ansible.com/", desc: "Infrastructure as Code — deklaratif, reproducible, otomasi ratusan server sekaligus", tags: ["ent→os"] },
+      { n: "FreeIPA", cat: "warning", d: 4, url: "https://www.freeipa.org/", desc: "Manajemen identitas terpusat Linux — Active Directory versi open-source dari Red Hat", tags: ["ent→os"] },
+      { n: "Apache Kafka", cat: "warning", d: 4, url: "https://kafka.apache.org/", desc: "Distributed event streaming platform — pipa data skala masif, lahir dari LinkedIn", tags: ["ent→os"] },
+      { n: "FRRouting", cat: "warning", d: 4, url: "https://frrouting.org/", desc: "BGP/OSPF routing suite — implementasi routing protocol untuk jadi ISP sendiri", tags: ["powerful"] },
+      { n: "Istio", cat: "danger", d: 5, url: "https://istio.io/", desc: "Service mesh untuk Kubernetes — observability, traffic management, mutual TLS antar service", tags: ["ent→os", "cncf"] },
+      { n: "Cilium", cat: "danger", d: 5, url: "https://cilium.io/", desc: "eBPF-based networking & security untuk K8s — next-gen CNI, pengganti iptables", tags: ["cncf", "powerful"] },
+      { n: "Rook + Ceph", cat: "danger", d: 5, url: "https://rook.io/", desc: "Ceph diorkestrasikan oleh Kubernetes — storage cloud-native distributed level production", tags: ["cncf"] },
+      { n: "Vitess", cat: "danger", d: 5, url: "https://vitess.io/", desc: "Horizontal database sharding untuk MySQL/PostgreSQL — lahir dari YouTube untuk skala global", tags: ["ent→os"] },
+      { n: "SPIFFE / SPIRE", cat: "danger", d: 5, url: "https://spiffe.io/", desc: "Workload identity & zero-trust authentication antar service — standar industri CNCF", tags: ["cncf"] },
+      { n: "Crossplane", cat: "danger", d: 5, url: "https://www.crossplane.io/", desc: "Universal control plane — manage cloud resources external via Kubernetes CRD", tags: ["cncf"] },
+      { n: "Longhorn", cat: "danger", d: 4, url: "https://longhorn.io/", desc: "Distributed block storage ringan untuk Kubernetes dari Rancher/SUSE — lebih mudah dari Ceph", tags: ["cncf", "ent→os"] },
     ];
 
     let activeCat = 'all';
-
-    function diffDots(d) {
-      const colors = ['', '#888780', '#378ADD', '#7F77DD', '#E24B4A', '#A32D2D'];
-      let s = '';
-      for (let i = 1; i <= 5; i++) {
-        const color = i <= d ? colors[Math.min(d, 5)] : 'var(--color-border-secondary)';
-        s += `<span style="color:${color};">●</span>`;
-      }
-      return s;
-    }
-
-    function renderCards() {
-      const q = document.getElementById('search').value.toLowerCase();
-      const list = tools.filter(t => {
-        const catMatch = activeCat === 'all' || t.cat === activeCat;
-        const qMatch = !q || t.n.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || (t.tags && t.tags.some(x => x.includes(q)));
-        return catMatch && qMatch;
-      });
-
-      const grid = document.getElementById('grid');
-      const empty = document.getElementById('empty');
-      const stats = document.getElementById('stats');
-
-      if (!list.length) {
-        grid.innerHTML = '';
-        empty.style.display = 'block';
-        stats.innerHTML = '';
-        return;
-      }
-
-      empty.style.display = 'none';
-      const catCounts = {};
-      list.forEach(t => catCounts[t.cat] = (catCounts[t.cat] || 0) + 1);
-
-      stats.innerHTML = `<span class="stats-count">// ${list.length} tools</span>` +
-        Object.entries(catCounts).map(([c, n]) =>
-          `<span class="stats-tag" style="border-color:${CATS[c].border}; color:${CATS[c].border}; background: ${CATS[c].border}15">${CATS[c].label} ×${n}</span>`
-        ).join('');
-
-      grid.innerHTML = list.map(t => {
-        const c = CATS[t.cat];
-        const isWarn = t.cat === 'warning' || t.cat === 'danger';
-
-        return `
-          <div class="tool-card" onclick="window.open('${t.url}', '_blank')" style="border-left-color: ${c.border}">
-            <div class="card-header">
-              <div class="card-title-wrapper">
-                <span style="color:${c.border}; font-size:14px;">${c.icon}</span>
-                <span class="card-title ${isWarn ? 'text-danger' : ''}">${t.n}</span>
-                <svg class="tool-link-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              </div>
-              <span style="font-size:12px;letter-spacing:1px;white-space:nowrap;">${diffDots(t.d)}</span>
-            </div>
-            <p class="card-desc">${t.desc}</p>
-            <div class="tag-container">
-              ${t.tags.map(tag => `<span class="tag-pill ${TAG_MAP[tag] || 'tag-default'}">${tag}</span>`).join('')}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function filter(cat) {
-      activeCat = cat;
-      document.querySelectorAll('.fBtn').forEach(b => {
-        const bCat = b.dataset.cat;
-        if (bCat === cat) {
-          b.classList.add('active');
-          if (bCat !== 'all') b.style.borderColor = CATS[bCat].border;
-        } else {
-          b.classList.remove('active');
-          if (bCat !== 'all') b.style.borderColor = 'var(--color-border-secondary)';
-        }
-      });
-      renderCards();
-    }
-
-    // Initialize button colors
-    document.querySelectorAll('.fBtn').forEach(b => {
-      const bCat = b.dataset.cat;
-      if (bCat !== 'all') {
-        b.style.color = CATS[bCat].border;
-        b.addEventListener('mouseenter', () => { if(!b.classList.contains('active')) b.style.background = CATS[bCat].border + '20'; });
-        b.addEventListener('mouseleave', () => { if(!b.classList.contains('active')) b.style.background = 'var(--color-background-secondary)'; });
-      }
-    });
 
     const legend = `<div class="legend">
       <span class="legend-item">● tingkat kesulitan (1–5)</span>
@@ -216,7 +154,7 @@
     </div>`;
     document.querySelector('.roadmap-wrapper').insertAdjacentHTML('beforeend', legend);
 
-    renderCards();
+    initArsenal();
   </script>
 </body>
 

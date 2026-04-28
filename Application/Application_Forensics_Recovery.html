@@ -28,6 +28,7 @@
         <button onclick="filter('fondasi')" data-cat="fondasi" class="fBtn">⬡ fondasi</button>
         <button onclick="filter('imaging')" data-cat="imaging" class="fBtn">⬡ imaging</button>
         <button onclick="filter('analysis')" data-cat="analysis" class="fBtn">⬡ analysis</button>
+        <button onclick="filter('incident')" data-cat="incident" class="fBtn">⬡ incident</button>
         <button onclick="filter('recovery')" data-cat="recovery" class="fBtn">⬡ recovery</button>
         <button onclick="filter('mobile')" data-cat="mobile" class="fBtn">⬡ mobile</button>
         <button onclick="filter('warning')" data-cat="warning" class="fBtn">⚠ warning zone</button>
@@ -45,11 +46,13 @@
     </div>
   </div>
 
+  <script src="arsenal.js"></script>
   <script>
     const CATS = {
       fondasi: { label: "fondasi", border: "#888780", icon: "⬡" },
       imaging: { label: "imaging", border: "#378ADD", icon: "⬡" },
       analysis: { label: "analysis", border: "#7F77DD", icon: "⬡" },
+      incident: { label: "incident", border: "#22B14C", icon: "⬡" },
       recovery: { label: "recovery", border: "#BA7517", icon: "⬡" },
       mobile: { label: "mobile", border: "#639922", icon: "⬡" },
       warning: { label: "⚠ warning zone", border: "#E24B4A", icon: "⚠" },
@@ -64,19 +67,14 @@
     };
 
     const tools = [
-      // fondasi
       { n: "SystemRescue", cat: "fondasi", d: 1, url: "https://www.system-rescue.org/", desc: "Live OS wajib untuk recovery — include tool partisi, imaging, & rescue paling lengkap dalam satu ISO.", tags: ["powerful"] },
       { n: "SIFT Workstation", cat: "fondasi", d: 3, url: "https://www.sans.org/tools/sift-workstation/", desc: "Workstation dari SANS — Ubuntu-based dengan koleksi tool DFIR (Digital Forensics & Incident Response) paling komprehensif.", tags: ["powerful"] },
       { n: "CAINE", cat: "fondasi", d: 1, url: "https://www.caine-project.com/", desc: "Distro forensik Italia dengan interface GUI yang user-friendly & automasi laporan investigasi.", tags: [] },
       { n: "Paladin OS", cat: "fondasi", d: 1, url: "https://sumuri.com/software/paladin/", desc: "Forensic-focused Linux distro dengan fitur write-blocking otomatis untuk menjaga integritas bukti digital.", tags: ["ent→os"] },
-
-      // imaging
       { n: "FTK Imager", cat: "imaging", d: 1, url: "https://www.exterro.com/ftk-imager", desc: "Standard industri untuk imaging disk — preview file system & buat image (E01/Raw) tanpa merubah data asli.", tags: ["ent→os", "powerful"] },
       { n: "ddrescue", cat: "imaging", d: 2, url: "https://www.gnu.org/software/ddrescue/", desc: "Tool imaging cerdas untuk drive rusak — bisa resume & fokus ke area yang masih sehat dulu sebelum coba area bad sector.", tags: ["powerful"] },
       { n: "Guymager", cat: "imaging", d: 1, url: "https://guymager.sourceforge.io/", desc: "Forensic imager berbasis GUI yang cepat & support format E01 serta verifikasi hash otomatis.", tags: [] },
       { n: "AFF4 Imager", cat: "imaging", d: 3, url: "https://github.com/aff4/aff4", desc: "Format imaging modern — support kompresi tinggi & cloud storage, masa depan forensic imaging.", tags: [] },
-
-      // analysis
       { n: "Autopsy", cat: "analysis", d: 2, url: "https://www.autopsy.com/", desc: "GUI analysis platform — cari keyword, timeline analysis, & extract artifacts Windows/Android dengan mudah.", tags: ["powerful"] },
       { n: "Volatility 3", cat: "analysis", d: 4, url: "https://www.volatilityfoundation.org/", desc: "Memory forensics framework — bedah RAM dump untuk cari malware, koneksi network, atau password tersimpan.", tags: ["powerful"] },
       { n: "Hayabusa", cat: "analysis", d: 3, url: "https://github.com/Yamato-Security/hayabusa", desc: "Windows event log hunter — scan ribuan log Windows dalam hitungan detik untuk cari jejak intrusi via Sigma rules.", tags: ["powerful"] },
@@ -84,103 +82,43 @@
       { n: "CyberChef", cat: "analysis", d: 1, url: "https://gchq.github.io/CyberChef/", desc: "Cyber Swiss Army Knife — konversi data, dekripsi, & manipulasi binary langsung di browser. Sangat serbaguna.", tags: ["powerful"] },
       { n: "Velociraptor", cat: "analysis", d: 4, url: "https://docs.velociraptor.app/", desc: "Endpoint visibility & hunting — monitor & investigasi ribuan komputer secara remote via VQL query.", tags: ["ent→os", "powerful"] },
       { n: "Eric Zimmerman Tools", cat: "analysis", d: 3, url: "https://ericzimmerman.github.io/#!index.md", desc: "Kumpulan tool Windows triage legendaris untuk bedah Registry, MFT, LNK files, & ShellBags.", tags: ["powerful"] },
-
-      // recovery
       { n: "TestDisk", cat: "recovery", d: 2, url: "https://www.cgsecurity.org/", desc: "Tool legendaris untuk recovery partisi — perbaiki boot sector & kembalikan partisi yang hilang/RAW.", tags: ["powerful"] },
       { n: "PhotoRec", cat: "recovery", d: 2, url: "https://www.cgsecurity.org/wiki/PhotoRec", desc: "File carver hardcore — mengabaikan file system & fokus cari signature file (JPG, PDF, ZIP) dari disk rusak.", tags: ["powerful"] },
       { n: "DMDE", cat: "recovery", d: 4, url: "https://dmde.com/", desc: "Disk editor & recovery — sangat kuat untuk rekonstruksi manual struktur file system yang hancur total.", tags: ["powerful"] },
       { n: "DiskGenius", cat: "recovery", d: 2, url: "https://www.diskgenius.com/", desc: "All-in-one disk manager & recovery — sangat handal dalam menangani drive dengan banyak bad sector.", tags: ["powerful"] },
       { n: "R-Studio", cat: "recovery", d: 2, url: "https://www.r-studio.com/", desc: "Suite recovery profesional — support rekonstruksi RAID kompleks & recovery via network.", tags: ["ent→os"] },
-
-      // mobile
-      { n: "Magnet AXIOM", cat: "mobile", d: 3, url: "https://www.magnetforensics.com/products/magnet-axiom/", desc: "Platform investigasi lengkap — satu dashboard untuk mobile, computer, & cloud artifacts.", tags: ["ent→os"] },
+      { n: "Magnet AXIOM", cat: "analysis", d: 4, url: "https://www.magnetforensics.com/products/magnet-axiom/", desc: "Comprehensive digital forensics platform — dapatkan artefak dari semua sumber: device, cloud, komputer, & vehicle. Standar industri DFIR.", tags: ["lab-grade", "powerful"] },
       { n: "ADB", cat: "mobile", d: 2, url: "https://developer.android.com/studio/command-line/adb", desc: "Android Debug Bridge — tool wajib untuk akses shell & ambil data backup dari device Android.", tags: [] },
       { n: "iBackupBot", cat: "mobile", d: 2, url: "http://www.icopybot.com/itunes-backup-manager.htm", desc: "Explorer untuk iTunes backup — cara mudah untuk akses database SMS, WhatsApp, & Foto dari iPhone.", tags: [] },
-
-      // warning
       { n: "X-Ways Forensics", cat: "warning", d: 4, url: "https://www.x-ways.net/forensics/", desc: "Forensic suite paling efisien — sangat cepat, portable, & tidak butuh resource besar. Favorit para pro.", tags: ["powerful"] },
       { n: "REMnux", cat: "warning", d: 4, url: "https://remnux.org/", desc: "Distro Linux khusus untuk malware analysis & reverse engineering file-file berbahaya.", tags: ["powerful"] },
       { n: "Hashcat", cat: "warning", d: 5, url: "https://hashcat.net/hashcat/", desc: "Password cracker tercepat di dunia — gunakan GPU untuk recovery password file terenkripsi.", tags: ["powerful"] },
-
-      // danger
       { n: "PC-3000", cat: "danger", d: 5, url: "https://www.acelab.eu.com/pc3000.php", desc: "The King of Data Recovery — hardware khusus untuk perbaiki firmware drive & ambil data dari disk mati.", tags: ["lab-grade", "powerful"] },
       { n: "Ghidra", cat: "danger", d: 5, url: "https://ghidra-sre.org/", desc: "Reverse Engineering suite dari NSA — bedah virus & program biner sampai ke baris kode aslinya.", tags: ["nsa", "powerful"] },
       { n: "Oxygen Forensics", cat: "danger", d: 5, url: "https://www.oxygen-forensic.com/", desc: "Tool mobile forensics kelas atas — bypass encryption & extract data dari ribuan model smartphone & IoT.", tags: ["lab-grade"] },
+      { n: "Dolphin Data Lab", cat: "danger", d: 5, url: "https://www.dolphindatalab.com/", desc: "Raja recovery video DVR/CCTV — bisa recovery rekaman yang ter-overwrite (loop recording) & perbaiki firmware 99% merek DVR.", tags: ["lab-grade", "powerful"] },
+      { n: "UFS Explorer", cat: "recovery", d: 3, url: "https://www.ufsexplorer.com/", desc: "Rajanya rekonstruksi RAID (0,1,5,6,10) & recovery NAS/SAN — sangat kuat untuk storage kompleks & virtualisasi.", tags: ["ent→os"] },
+      { n: "File System Forensic Assistant (FSFA)", cat: "recovery", d: 4, url: "https://ntfspro.ru/", desc: "FSFA dari developer NTFS Pro — sangat powerful untuk recovery dari korupsi tingkat parah & rekonstruksi file system manual.", tags: ["powerful"] },
+      { n: "Cellebrite UFED", cat: "mobile", d: 5, url: "https://www.cellebrite.com/en/ufed/", desc: "Standar industri untuk mobile extraction — tembus keamanan Android/iOS, ambil data chat & dokumen yang dihapus langsung dari chip memori.", tags: ["lab-grade", "powerful"] },
+      { n: "XRY", cat: "mobile", d: 5, url: "https://www.msab.com/products/xry/", desc: "Mobile forensics suite dari MSAB — salah satu pesaing utama Cellebrite, support extraction dari locked devices & cloud sources.", tags: ["lab-grade"] },
+      { n: "GrayKey", cat: "danger", d: 5, url: "https://www.grayshift.com/products/graykey", desc: "Alat bypass iPhone kelas FBI — bisa crack passcode iOS dalam hitungan menit bahkan di device yang terkunci rapat. Sangat mahal & eksklusif.", tags: ["lab-grade", "powerful"] },
+      { n: "Atola TaskForce", cat: "danger", d: 5, url: "https://atola.com/products/taskforce/", desc: "Hardware imager tercepat — auto-diagnosis kerusakan hardware sebelum imaging, support multi-drive parallel.", tags: ["lab-grade", "powerful"] },
+      { n: "Sleuth Kit", cat: "analysis", d: 3, url: "https://www.sleuthkit.org/", desc: "CLI forensic framework — engine di balik Autopsy. fls, icat, fsstat untuk analisis file system level granular.", tags: ["powerful"] },
+      { n: "Plaso", cat: "analysis", d: 3, url: "https://plaso.readthedocs.io/", desc: "Super-detailed timeline generation — aggregasi timestamp dari registry, event logs, browser, & file system dalam satu timeline.", tags: ["powerful"] },
+      { n: "Bulk Extractor", cat: "analysis", d: 2, url: "https://github.com/simsong/bulk_extractor", desc: "Fast triage scanner — cari email, nomor CC, URL, & data sensitif dari seluruh disk tanpa perlu parse file system.", tags: [] },
+      { n: "Foremost", cat: "recovery", d: 2, url: "https://github.com/kieranjol/foremost", desc: "Military-grade file carving dari US Air Force — predefined headers untuk recovery file umum (JPG, PDF, DOC, ZIP).", tags: [] },
+      { n: "Scalpel", cat: "recovery", d: 2, url: "https://github.com/scalpel-forensics/scalpel", desc: "File carver modern dari Harvard — optimasi dari Foremost, support custom file signatures & lebih cepat untuk dataset besar.", tags: [] },
+      { n: "QRadar", cat: "incident", d: 5, url: "https://www.ibm.com/products/qradar", desc: "Enterprise SIEM & log management — kumpulkan data dari network, server, & aplikasi untuk deteksi ancaman real-time.", tags: ["ent→os"] },
+      { n: "Splunk", cat: "incident", d: 4, url: "https://www.splunk.com/", desc: "Data analytics platform untuk IT operations — index & analyze log dari mana saja, buat dashboard, setting alert, & integrasi dengan security tools.", tags: ["ent→os"] },
+      { n: "RapidSpar", cat: "danger", d: 4, url: "https://www.rapidaspar.com/", desc: "Cloud-based firmware repair — perbaiki masalah firmware HDD/SSD secara otomatis tanpa perlu jadi ahli firmware.", tags: ["lab-grade"] },
+      { n: "Magnet RAMalyzer", cat: "danger", d: 5, url: "https://www.magnetforensics.com/products/magnet-ramalyzer/", desc: "Advanced memory analysis tool — dapatkan decrypted keys, password, tokens, & artefak lain dari memory dump.", tags: ["lab-grade", "powerful"] },
+      { n: "Belkasoft X", cat: "analysis", d: 4, url: "https://belkasoft.com/x", desc: "All-in-one digital forensics suite — sangat handal untuk ekstraksi artifacts dari 1000+ aplikasi mobile & desktop, cloud, serta RAM.", tags: ["lab-grade", "powerful"] },
+      { n: "EnCase Forensic", cat: "analysis", d: 5, url: "https://www.opentext.com/products/encase-forensic", desc: "Legenda dunia forensik — sangat kuat untuk deep investigation & forensic imaging di lingkungan enterprise skala besar.", tags: ["ent→os", "lab-grade"] },
+      { n: "Nuix Neo", cat: "analysis", d: 5, url: "https://www.nuix.com/", desc: "Super-fast data processing — mampu mengolah terabyte data dalam waktu singkat untuk eDiscovery & investigasi korporat masif.", tags: ["ent→os", "lab-grade"] },
+      { n: "Binalyze AIR", cat: "incident", d: 4, url: "https://www.binalyze.com/air", desc: "Automated remote forensics — kumpulkan bukti digital dari ribuan endpoint secara bersamaan hanya dalam hitungan menit.", tags: ["ent→os", "powerful"] },
     ];
 
     let activeCat = 'all';
-
-    function diffDots(d) {
-      const colors = ['', '#888780', '#378ADD', '#7F77DD', '#E24B4A', '#A32D2D'];
-      let s = '';
-      for (let i = 1; i <= 5; i++) {
-        const color = i <= d ? colors[Math.min(d, 5)] : 'var(--color-border-secondary)';
-        s += `<span style="color:${color};">●</span>`;
-      }
-      return s;
-    }
-
-    function renderCards() {
-      const q = document.getElementById('search').value.toLowerCase();
-      const list = tools.filter(t => {
-        const catMatch = activeCat === 'all' || t.cat === activeCat;
-        const qMatch = !q || t.n.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || (t.tags && t.tags.some(x => x.includes(q)));
-        return catMatch && qMatch;
-      });
-
-      const grid = document.getElementById('grid');
-      const empty = document.getElementById('empty');
-      const stats = document.getElementById('stats');
-
-      if (!list.length) {
-        grid.innerHTML = '';
-        empty.style.display = 'block';
-        stats.innerHTML = '';
-        return;
-      }
-
-      empty.style.display = 'none';
-      const catCounts = {};
-      list.forEach(t => catCounts[t.cat] = (catCounts[t.cat] || 0) + 1);
-
-      stats.innerHTML = `<span class="stats-count">// ${list.length} tools</span>` +
-        Object.entries(catCounts).map(([c, n]) =>
-          `<span class="stats-tag" style="border-color:${CATS[c].border}">${CATS[c].label} ×${n}</span>`
-        ).join('');
-
-      grid.innerHTML = list.map(t => {
-        const c = CATS[t.cat];
-        const isWarn = t.cat === 'warning' || t.cat === 'danger';
-
-        return `
-          <div class="tool-card" onclick="window.open('${t.url}', '_blank')" style="border-left-color: ${c.border}">
-            <div class="card-header">
-              <div class="card-title-wrapper">
-                <span class="card-title ${isWarn ? 'text-danger' : ''}">${t.cat === 'danger' ? '☠ ' : ''}${t.n}</span>
-                <svg class="tool-link-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              </div>
-              <span style="font-size:12px;letter-spacing:1px;white-space:nowrap;">${diffDots(t.d)}</span>
-            </div>
-            <p class="card-desc">${t.desc}</p>
-            <div class="tag-container">
-              ${t.tags.map(tag => `<span class="tag-pill ${TAG_MAP[tag] || 'tag-default'}">${tag}</span>`).join('')}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function filter(cat) {
-      activeCat = cat;
-      document.querySelectorAll('.fBtn').forEach(b => {
-        if (b.dataset.cat === cat) {
-          b.classList.add('active');
-        } else {
-          b.classList.remove('active');
-        }
-      });
-      renderCards();
-    }
 
     const legend = `<div class="legend">
       <span class="legend-item">● tingkat kesulitan (1–5)</span>
@@ -203,7 +141,7 @@
     </div>`;
     document.querySelector('.roadmap-wrapper').insertAdjacentHTML('beforeend', legend);
 
-    renderCards();
+    initArsenal();
   </script>
 </body>
 
