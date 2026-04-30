@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offensive Security Arsenal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+<base target="_blank">
+</head>
+
+<body>
+  <div class="container">
+    <h2 class="sr-only">Offensive Security Tools — Arsenal Belajar Lengkap</h2>
+
+    <div class="roadmap-wrapper">
+      <div class="header-row">
+        <span class="header-title">// offensive.arsenal</span>
+        <span class="header-subtitle">— dari reconnaissance sampai advanced persistent threat simulation</span>
+      </div>
+
+      <div class="filter-row" id="filters">
+        <button onclick="filter('all')" data-cat="all" class="fBtn active">semua</button>
+        <button onclick="filter('recon')" data-cat="recon" class="fBtn">⬡ recon</button>
+        <button onclick="filter('scanning')" data-cat="scanning" class="fBtn">⬡ scanning</button>
+        <button onclick="filter('exploitation')" data-cat="exploitation" class="fBtn">⬡ exploitation</button>
+        <button onclick="filter('post-exploit')" data-cat="post-exploit" class="fBtn">⬡ post-exploit</button>
+        <button onclick="filter('web-app')" data-cat="web-app" class="fBtn">⬡ web-app</button>
+        <button onclick="filter('wireless')" data-cat="wireless" class="fBtn">⬡ wireless</button>
+        <button onclick="filter('warning')" data-cat="warning" class="fBtn">⚠ warning zone</button>
+        <button onclick="filter('danger')" data-cat="danger" class="fBtn">☠ danger zone</button>
+      </div>
+
+      <input type="text" id="search" oninput="renderCards()" placeholder="cari tool..." class="search-input">
+
+      <div id="stats"></div>
+      <div id="grid"></div>
+      <div id="empty">
+        // no results found
+      </div>
+
+    </div>
+  </div>
+
+  <script src="arsenal.js"></script>
+  <script>
+    const CATS = {
+      recon: { label: "recon", border: "#888780", icon: "⬡" },
+      scanning: { label: "scanning", border: "#378ADD", icon: "⬡" },
+      exploitation: { label: "exploitation", border: "#D85A30", icon: "⬡" },
+      "post-exploit": { label: "post-exploit", border: "#7F77DD", icon: "⬡" },
+      "web-app": { label: "web-app", border: "#BA7517", icon: "⬡" },
+      wireless: { label: "wireless", border: "#639922", icon: "⬡" },
+      warning: { label: "⚠ warning zone", border: "#E24B4A", icon: "⚠" },
+      danger: { label: "☠ danger zone", border: "#A32D2D", icon: "☠" },
+    };
+
+    const TAG_MAP = {
+      "ent→os": "tag-info",
+      "powerful": "tag-warning",
+      "cncf": "tag-success",
+      "nsa": "tag-danger",
+      "c2": "tag-danger",
+      "osint": "tag-info",
+      "hardware": "tag-warning",
+      "custom": "tag-warning",
+      "apt": "tag-danger",
+    };
+
+    const tools = [
+      // ⬡ RECONNAISSANCE
+      { n: "theHarvester", cat: "recon", d: 1, url: "https://github.com/laramies/theHarvester", desc: "Email harvesting & subdomain discovery — scrape Google, Bing, Shodan, Hunter.io untuk mapping digital footprint target.", tags: ["osint"] },
+      { n: "Maltego", cat: "recon", d: 2, url: "https://www.maltego.com/", desc: "OSINT visualization platform — hubungkan entity (domain, IP, email, social media) dalam graph interaktif untuk melihat relasi tersembunyi.", tags: ["ent→os", "powerful"] },
+      { n: "Recon-ng", cat: "recon", d: 2, url: "https://github.com/lanmaster53/recon-ng", desc: "Web reconnaissance framework — modular, database-backed, automate seluruh workflow OSINT dari satu console.", tags: ["osint", "powerful"] },
+      { n: "Shodan", cat: "recon", d: 1, url: "https://www.shodan.io/", desc: "Search engine untuk perangkat IoT & server yang terkoneksi internet — temukan webcam, router, PLC, database yang terexpose.", tags: ["osint", "ent→os"] },
+      { n: "Amass", cat: "recon", d: 2, url: "https://github.com/owasp-amass/amass", desc: "In-depth attack surface mapping & asset discovery — gabungkan passive & active recon untuk mapping infrastruktur target yang lengkap.", tags: ["osint", "cncf", "powerful"] },
+      { n: "SpiderFoot", cat: "recon", d: 2, url: "https://github.com/smicallef/spiderfoot", desc: "Automated OSINT collection — 200+ modules untuk gather data dari social media, dark web, breach database, dan threat intel feeds.", tags: ["osint", "powerful"] },
+      { n: "OSINT Framework", cat: "recon", d: 1, url: "https://osintframework.com/", desc: "Curated directory 1000+ OSINT tools & resources — roadmap berpikir untuk investigator, bukan tool executable.", tags: ["osint"] },
+      { n: "GHunt", cat: "recon", d: 2, url: "https://github.com/mxrch/GHunt", desc: "Investigate Google Accounts — ekstrak metadata dari email Google, review Maps, Calendar, YouTube untuk profiling target.", tags: ["osint", "custom"] },
+
+      // ⬡ SCANNING
+      { n: "Nmap", cat: "scanning", d: 1, url: "https://nmap.org/", desc: "Network scanner paling fundamental — port scanning, OS fingerprinting, service version detection, NSE scripting engine.", tags: ["powerful"] },
+      { n: "Masscan", cat: "scanning", d: 2, url: "https://github.com/robertdavidgraham/masscan", desc: "Internet-scale port scanner — scan seluruh internet dalam 6 menit. Async stateless, 10 juta packet/detik.", tags: ["powerful"] },
+      { n: "OpenVAS / Greenbone", cat: "scanning", d: 2, url: "https://www.openvas.org/", desc: "Vulnerability scanner lengkap — 50.000+ CVE checks, report otomatis, scheduling, dan compliance scanning.", tags: ["ent→os"] },
+      { n: "Nessus", cat: "scanning", d: 2, url: "https://www.tenable.com/products/nessus", desc: "Industry standard vulnerability scanner — plugin library terbesar, credentialed scanning, configuration audit.", tags: ["ent→os", "powerful"] },
+      { n: "Nikto", cat: "scanning", d: 1, url: "https://github.com/sullo/nikto", desc: "Web vulnerability scanner — 6.700+ tests untuk web server: dangerous files, outdated software, misconfigurations.", tags: [] },
+      { n: "OWASP ZAP", cat: "scanning", d: 2, url: "https://www.zaproxy.org/", desc: "Web app security scanner & proxy — automated scan, spidering, fuzzing, dan active/passive scanning untuk OWASP Top 10.", tags: ["ent→os", "powerful"] },
+      { n: "RustScan", cat: "scanning", d: 1, url: "https://github.com/RustScan/RustScan", desc: "Modern port scanner — 3 detik untuk 65.000 port, auto-pipe ke Nmap untuk deep scan. Async & blazing fast.", tags: ["powerful"] },
+
+      // ⬡ EXPLOITATION
+      { n: "Metasploit Framework", cat: "exploitation", d: 2, url: "https://www.metasploit.com/", desc: "Exploitation framework paling komprehensif — 2.000+ exploit, payload generator, post-exploitation modules, dan automation.", tags: ["ent→os", "powerful"] },
+      { n: "Cobalt Strike", cat: "exploitation", d: 4, url: "https://www.cobaltstrike.com/", desc: "Commercial adversary simulation platform — C2, beaconing, malleable C2 profile, dan post-exploitation toolkit profesional.", tags: ["c2", "apt", "ent→os"] },
+      { n: "Sliver", cat: "exploitation", d: 3, url: "https://github.com/BishopFox/sliver", desc: "Open-source C2 framework — cross-platform implant, multiplayer mode, DNS/HTTP/HTTPS beaconing. Alternatif gratis Cobalt Strike.", tags: ["c2", "powerful"] },
+      { n: "Empire / Starkiller", cat: "exploitation", d: 3, url: "https://github.com/BC-SECURITY/Empire", desc: "PowerShell & Python post-exploitation agent — modular, stealthy, dan deeply integrated dengan Windows internals.", tags: ["c2", "powerful"] },
+      { n: "BeEF", cat: "exploitation", d: 2, url: "https://beefproject.com/", desc: "Browser Exploitation Framework — hook browser korban via XSS, kontrol DOM, keylogging, dan social engineering via browser.", tags: ["powerful"] },
+      { n: "SearchSploit", cat: "exploitation", d: 1, url: "https://www.exploit-db.com/searchsploit", desc: "Command-line search untuk Exploit-DB — 50.000+ exploit PoC, searchable offline, integrate dengan Metasploit.", tags: [] },
+      { n: "SQLMap", cat: "exploitation", d: 2, url: "https://sqlmap.org/", desc: "Automated SQL injection & database takeover — detect, exploit, dump database, crack password hash, dan takeover server.", tags: ["powerful"] },
+      { n: "Commix", cat: "exploitation", d: 3, url: "https://github.com/commixproject/commix", desc: "Automated command injection — detect & exploit OS command injection vulnerabilities dengan berbagai technique.", tags: ["powerful"] },
+
+      // ⬡ POST-EXPLOITATION
+      { n: "Mimikatz", cat: "post-exploit", d: 3, url: "https://github.com/gentilkiwi/mimikatz", desc: "Credential dumping & Windows security tool — ekstrak plaintext password, hash, PIN, dan ticket Kerberos dari memory.", tags: ["powerful"] },
+      { n: "BloodHound", cat: "post-exploit", d: 3, url: "https://github.com/BloodHoundAD/BloodHound", desc: "Active Directory attack path analysis — visualisasi graph untuk menemukan jalur privilege escalation di AD.", tags: ["powerful", "ent→os"] },
+      { n: "CrackMapExec", cat: "post-exploit", d: 2, url: "https://github.com/byt3bl33d3r/CrackMapExec", desc: "Swiss army knife untuk pentesting Windows/AD — credential spraying, command execution, enumeration, dan lateral movement.", tags: ["powerful"] },
+      { n: "Impacket", cat: "post-exploit", d: 3, url: "https://github.com/fortra/impacket", desc: "Python library untuk network protocols — SMB, MSRPC, LDAP, Kerberos. Foundation untuk banyak tool Windows exploitation.", tags: ["powerful", "custom"] },
+      { n: "Chisel", cat: "post-exploit", d: 3, url: "https://github.com/jpillora/chisel", desc: "Fast TCP/UDP tunnel over HTTP — pivoting & port forwarding via reverse tunnel, bypass firewall dengan WebSocket.", tags: ["powerful", "custom"] },
+      { n: "LinPEAS / WinPEAS", cat: "post-exploit", d: 2, url: "https://github.com/carlospolop/PEASS-ng", desc: "Privilege escalation enumeration script — auto-detect misconfigurations, vulnerable software, dan credential leakage.", tags: ["powerful"] },
+      { n: "PsExec", cat: "post-exploit", d: 2, url: "https://learn.microsoft.com/en-us/sysinternals/downloads/psexec", desc: "Execute processes remotely — legitimate Sysinternals tool yang sering dipakai attacker untuk lateral movement.", tags: ["ent→os", "powerful"] },
+
+      // ⬡ WEB APPLICATION
+      { n: "Burp Suite", cat: "web-app", d: 2, url: "https://portswigger.net/burp", desc: "Web app security testing platform — proxy, scanner, intruder, repeater, dan extender dengan 3.000+ BApp plugins.", tags: ["ent→os", "powerful"] },
+      { n: "Burp Suite Professional", cat: "web-app", d: 3, url: "https://portswigger.net/burp/pro", desc: "Versi berbayar dengan automated scanning, project files, dan advanced vulnerability detection engine.", tags: ["ent→os", "powerful"] },
+      { n: "ffuf", cat: "web-app", d: 2, url: "https://github.com/ffuf/ffuf", desc: "Fast web fuzzer — directory discovery, virtual host brute force, parameter fuzzing. Go-based, concurrency tinggi.", tags: ["powerful", "custom"] },
+      { n: "Gobuster", cat: "web-app", d: 1, url: "https://github.com/OJ/gobuster", desc: "Directory & DNS busting — brute force URI, DNS subdomain, S3 bucket, dan virtual host dengan wordlist.", tags: [] },
+      { n: "XSStrike", cat: "web-app", d: 2, url: "https://github.com/s0md3v/XSStrike", desc: "Advanced XSS detection suite — context-aware analysis, WAF bypass, dan payload generation untuk reflected & DOM XSS.", tags: ["powerful", "custom"] },
+      { n: "Postman", cat: "web-app", d: 1, url: "https://www.postman.com/", desc: "API development & testing — manual testing, automation, dan reconnaissance untuk REST & GraphQL APIs.", tags: ["ent→os"] },
+      { n: "Arjun", cat: "web-app", d: 2, url: "https://github.com/s0md3v/Arjun", desc: "HTTP parameter discovery — temukan hidden parameters di endpoint untuk IDOR, SSRF, dan LFI exploitation.", tags: ["powerful", "custom"] },
+      { n: "ParamMiner", cat: "web-app", d: 2, url: "https://github.com/PortSwigger/param-miner", desc: "Burp extension untuk parameter discovery — guess hidden parameters, headers, dan cookie dengan wordlist & heuristics.", tags: ["powerful", "custom"] },
+
+      // ⬡ WIRELESS
+      { n: "Aircrack-ng", cat: "wireless", d: 2, url: "https://www.aircrack-ng.org/", desc: "WiFi security auditing suite — monitor, capture, inject, crack WEP/WPA/WPA2 handshake dengan dictionary & brute force.", tags: ["powerful", "hardware"] },
+      { n: "Wireshark", cat: "wireless", d: 2, url: "https://www.wireshark.org/", desc: "Network protocol analyzer — capture & inspect packet secara real-time, decode 2.000+ protocols, dan forensics network.", tags: ["powerful", "ent→os"] },
+      { n: "Bettercap", cat: "wireless", d: 3, url: "https://www.bettercap.org/", desc: "Network attack & monitoring framework — WiFi deauth, BLE sniffing, HID injection, proxy, dan modular attack.", tags: ["powerful", "hardware", "custom"] },
+      { n: "WiFi Pineapple", cat: "wireless", d: 3, url: "https://shop.hak5.org/products/wifi-pineapple", desc: "Rogue AP & WiFi auditing hardware — evil twin, captive portal, traffic interception, dan reconnaissance otomatis.", tags: ["hardware", "powerful"] },
+      { n: "HackRF One", cat: "wireless", d: 4, url: "https://greatscottgadgets.com/hackrf/one/", desc: "Software Defined Radio (SDR) — transmit & receive 1MHz-6GHz. Sniff RFID, replay car key, analyze GSM, dan RF research.", tags: ["hardware", "custom", "powerful"] },
+
+      // ⚠️ WARNING ZONE
+      { n: "Flipper Zero", cat: "warning", d: 3, url: "https://flipperzero.one/", desc: "Multi-tool portable untuk pentester — RFID, NFC, Sub-GHz, IR, Bluetooth, GPIO. Swiss army knife physical security.", tags: ["hardware", "powerful"] },
+      { n: "USB Rubber Ducky", cat: "warning", d: 3, url: "https://shop.hak5.org/products/usb-rubber-ducky", desc: "Keystroke injection tool — disguised as USB flash drive, injects pre-programmed keystrokes untuk payload delivery.", tags: ["hardware", "powerful"] },
+      { n: "Bash Bunny", cat: "warning", d: 4, url: "https://shop.hak5.org/products/bash-bunny", desc: "Multi-vector USB attack platform — switchable payloads: keystroke injection, network hijack, mass storage exploit.", tags: ["hardware", "powerful"] },
+      { n: "LAN Turtle", cat: "warning", d: 3, url: "https://shop.hak5.org/products/lan-turtle", desc: "Covert network implant — disguised as USB Ethernet adapter, remote access, man-in-the-middle, dan network recon.", tags: ["hardware", "powerful", "c2"] },
+      { n: "Proxmark3", cat: "warning", d: 4, url: "https://proxmark.com/", desc: "RFID & NFC research tool — read, write, clone, dan crack RFID cards (MIFARE, HID iCLASS, EM4x). Physical access bypass.", tags: ["hardware", "custom", "powerful"] },
+      { n: "Social-Engineer Toolkit (SET)", cat: "warning", d: 3, url: "https://github.com/trustedsec/social-engineer-toolkit", desc: "Social engineering attack framework — spear-phishing, credential harvesting, mass mailer, dan USB drop attack.", tags: ["powerful"] },
+
+      // ☠️ DANGER ZONE
+      { n: "Cobalt Strike (Malleable C2)", cat: "danger", d: 5, url: "https://www.cobaltstrike.com/", desc: "Advanced C2 dengan malleable profile — customize traffic untuk menyerupai aplikasi legitimate, bypass NGFW & EDR.", tags: ["c2", "apt", "ent→os", "powerful"] },
+      { n: "Havoc C2", cat: "danger", d: 5, url: "https://github.com/HavocFramework/Havoc", desc: "Modern post-exploitation C2 — sleep obfuscation, x64 return address spoofing, indirect syscalls, evade EDR modern.", tags: ["c2", "apt", "custom", "powerful"] },
+      { n: "Mythic", cat: "danger", d: 5, url: "https://github.com/its-a-feature/Mythic", desc: "Collaborative red teaming platform — Docker-based agents, real-time callback, dan extensible payload development.", tags: ["c2", "apt", "custom", "powerful"] },
+      { n: "Brute Ratel C4", cat: "danger", d: 5, url: "https://bruteratel.com/", desc: "Red team weaponization platform — sleep mask, Badger agent, external C2, dan advanced evasion technique.", tags: ["c2", "apt", "ent→os", "powerful"] },
+      { n: "NimPlant", cat: "danger", d: 5, url: "https://github.com/chv-nl/NimPlant", desc: "Lightweight C2 implant in Nim — small footprint, sleep obfuscation, in-memory execution, bypass AMSI & ETW.", tags: ["c2", "apt", "custom", "powerful"] },
+      { n: "Donut", cat: "danger", d: 5, url: "https://github.com/TheWover/donut", desc: "Shellcode generator — convert .NET assemblies, DLLs, EXEs ke position-independent shellcode untuk in-memory execution.", tags: ["apt", "custom", "powerful"] },
+      { n: "Unicorn", cat: "danger", d: 5, url: "https://github.com/trustedsec/unicorn", desc: "PowerShell downgrade attack & shellcode injection — bypass AMSI, inject shellcode langsung ke memory process.", tags: ["apt", "custom", "powerful"] },
+      { n: "Veil / Evasion", cat: "danger", d: 4, url: "https://github.com/Veil-Framework/Veil", desc: "Payload generator dengan AV evasion — encrypt & obfuscate Metasploit payload untuk bypass signature-based detection.", tags: ["apt", "custom", "powerful"] },
+      { n: "SharpCollection", cat: "danger", d: 4, url: "https://github.com/Flangvik/SharpCollection", desc: "Pre-compiled C# offensive tools — Rubeus, Seatbelt, SharpHound, dll. Siap pakai tanpa compile sendiri.", tags: ["apt", "custom", "powerful"] },
+      { n: "GhostPack", cat: "danger", d: 4, url: "https://github.com/GhostPack", desc: "C# offensive toolkit — Rubeus (Kerberos), Seatbelt (enumeration), SharpUp (privesc), SafetyKatz (Mimikatz port).", tags: ["apt", "custom", "powerful"] },
+      { n: "Red Team Toolkit (byinfosecn1nja)", cat: "danger", d: 4, url: "https://github.com/infosecn1nja/Red-Teaming-Toolkit", desc: "Curated list 500+ red team resources — C2, payload, evasion, post-exploitation, dan adversary simulation tools.", tags: ["apt", "custom", "powerful"] },
+      { n: "Atomic Red Team", cat: "danger", d: 4, url: "https://github.com/redcanaryco/atomic-red-team", desc: "Library of tests mapped to MITRE ATT&CK — simulate TTPs nyata untuk validasi detection capability blue team.", tags: ["apt", "powerful"] },
+      { n: "Caldera", cat: "danger", d: 4, url: "https://caldera.mitre.org/", desc: "Adversary emulation platform by MITRE — automate ATT&CK TTPs, plan operations, dan measure defensive coverage.", tags: ["apt", "nsa", "powerful"] },
+      { n: "Inceptor", cat: "danger", d: 5, url: "https://github.com/klezVirus/inceptor", desc: "Advanced PE loader & obfuscator — process hollowing, syscalls, sleep obfuscation, dan AMSI/ETW bypass automation.", tags: ["apt", "custom", "powerful"] },
+      { n: "ScareCrow", cat: "danger", d: 5, url: "https://github.com/optiv/ScareCrow", desc: "EDR evasion framework — create loaders yang bypass modern EDR dengan syscalls, unhooking, dan sleep encryption.", tags: ["apt", "custom", "powerful"] },
+      { n: "Sliver Armory", cat: "danger", d: 5, url: "https://github.com/sliverarmory", desc: "Extension & BOF (Beacon Object File) untuk Sliver — extend capability dengan C/C++ code yang inject ke implant.", tags: ["c2", "apt", "custom", "powerful"] },
+      { n: "PEzor", cat: "danger", d: 5, url: "https://github.com/phra/PEzor", desc: "PE packer & loader generator — LLVM obfuscation, syscalls, sleep mask, dan anti-analysis untuk payload Windows.", tags: ["apt", "custom", "powerful"] },
+      { n: "AceLdr", cat: "danger", d: 5, url: "https://github.com/kyleavery/AceLdr", desc: "COFF/BOF loader dengan sleep obfuscation — execute Beacon Object File tanpa Cobalt Strike, bypass userland hooks.", tags: ["apt", "custom", "powerful"] },
+      { n: "Ekko / Foliage", cat: "danger", d: 5, url: "https://github.com/Mr-Un1k0d3r/EDR-Preloader", desc: "Sleep obfuscation technique — encrypt implant di memory saat sleep, decrypt hanya saat execution. Evade memory scanner.", tags: ["apt", "custom", "powerful"] },
+    ];
+
+    let activeCat = 'all';
+
+    const legend = `<div class="legend">
+      <span class="legend-item">● tingkat kesulitan (1–5)</span>
+      <div class="legend-group">
+        <span class="tag-pill tag-info">ent→os</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">enterprise → opensource</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-warning">powerful</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">tidak viral tapi dahsyat</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-success">cncf</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">cloud native foundation</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-danger">c2</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">command & control framework</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-danger">apt</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">advanced persistent threat</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-info">osint</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">open source intelligence</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-warning">hardware</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">butuh perangkat fisik</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-warning">custom</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">butuh build/code sendiri</span>
+      </div>
+    </div>`;
+    document.querySelector('.roadmap-wrapper').insertAdjacentHTML('beforeend', legend);
+
+    initArsenal();
+  </script>
+</body>
+
+</html>
