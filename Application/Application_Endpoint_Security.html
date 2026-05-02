@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Endpoint Security Arsenal — Post Defender</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- SEO & Bot Configuration -->
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+  <meta name="ChatGPT-User" content="index, follow">
+  <meta name="PerplexityBot" content="index, follow">
+  <meta name="ClaudeBot" content="index, follow">
+  <meta name="Bytespider" content="index, follow">
+  <meta name="Amazonbot" content="index, follow">
+  <meta name="FacebookBot" content="index, follow">
+  <link rel="canonical" href="https://azhar457.github.io/Application/Application_Endpoint_Security.html">
+</head>
+
+<body>
+  <div class="container">
+    <h2 class="sr-only">Endpoint Security Tools — Dari Firmware sampai User Space</h2>
+
+    <div class="roadmap-wrapper">
+      <div class="header-row">
+        <span class="header-title">// endpoint.arsenal</span>
+        <span class="header-subtitle">— dari ring -3 hardware sampai ring 3 user space, gratis & berbayar</span>
+      </div>
+
+      <div class="filter-row" id="filters">
+        <button onclick="filter('all')" data-cat="all" class="fBtn active">semua</button>
+        <button onclick="filter('hardware')" data-cat="hardware" class="fBtn">⬡ hardware</button>
+        <button onclick="filter('boot')" data-cat="boot" class="fBtn">⬡ boot</button>
+        <button onclick="filter('kernel')" data-cat="kernel" class="fBtn">⬡ kernel</button>
+        <button onclick="filter('defense')" data-cat="defense" class="fBtn">⬡ defense</button>
+        <button onclick="filter('isolation')" data-cat="isolation" class="fBtn">⬡ isolation</button>
+        <button onclick="filter('network')" data-cat="network" class="fBtn">⬡ network</button>
+        <button onclick="filter('forensics')" data-cat="forensics" class="fBtn">⬡ forensics</button>
+        <button onclick="filter('warning')" data-cat="warning" class="fBtn">⚠ warning zone</button>
+        <button onclick="filter('danger')" data-cat="danger" class="fBtn">☠ danger zone</button>
+      </div>
+
+      <input type="text" id="search" oninput="renderCards()" placeholder="cari tool..." class="search-input">
+
+      <div id="stats"></div>
+      <div id="grid"></div>
+      <div id="empty">
+        // no results found
+      </div>
+
+    </div>
+  </div>
+
+  <script src="arsenal.js"></script>
+  <script>
+    const CATS = {
+      hardware: { label: "hardware", border: "#888780", icon: "⬡" },
+      boot: { label: "boot", border: "#5B8DB8", icon: "⬡" },
+      kernel: { label: "kernel", border: "#D85A30", icon: "⬡" },
+      defense: { label: "defense", border: "#639922", icon: "⬡" },
+      isolation: { label: "isolation", border: "#BA7517", icon: "⬡" },
+      network: { label: "network", border: "#378ADD", icon: "⬡" },
+      forensics: { label: "forensics", border: "#7F77DD", icon: "⬡" },
+      warning: { label: "⚠ warning zone", border: "#E24B4A", icon: "⚠" },
+      danger: { label: "☠ danger zone", border: "#A32D2D", icon: "☠" },
+    };
+
+    const TAG_MAP = {
+      "oss": "tag-info",
+      "free": "tag-success",
+      "freeware": "tag-warning",
+      "paid": "tag-danger",
+      "powerful": "tag-warning",
+    };
+
+    const tools = [
+      // ===== HARDWARE (Ring -3 / -2 / -1) =====
+      { n: "Coreboot", cat: "hardware", d: 4, url: "https://coreboot.org/", desc: "Open source firmware replacement — ganti BIOS/UEFI proprietary. 💾 N/A | 📀 N/A", tags: ["oss", "free"] },
+      { n: "Heads", cat: "hardware", d: 4, url: "https://osresearch.net/", desc: "Tamper-evident boot dengan TPM + GPG keys. 💾 N/A | 📀 N/A", tags: ["oss", "free"] },
+      { n: "ME Cleaner", cat: "hardware", d: 4, url: "https://github.com/corna/me_cleaner", desc: "Strip & neutralize Intel ME modules. 💾 N/A | 📀 N/A", tags: ["oss", "free"] },
+      { n: "TPM2-Tools", cat: "hardware", d: 3, url: "https://github.com/tpm2-software/tpm2-tools", desc: "Verify PCR values & TPM attestation. 💾 ~5MB | 📀 ~2MB", tags: ["oss", "free"] },
+      { n: "Keylime", cat: "hardware", d: 4, url: "https://keylime.dev/", desc: "Remote attestation cloud-native via TPM. 💾 ~512MB | 📀 ~200MB", tags: ["oss", "free"] },
+      { n: "fwupd + LVFS", cat: "hardware", d: 2, url: "https://fwupd.org/", desc: "Firmware update dengan verifikasi signature. 💾 ~20MB | 📀 ~10MB", tags: ["oss", "free"] },
+      { n: "CHIPSEC", cat: "hardware", d: 4, url: "https://github.com/chipsec/chipsec", desc: "Audit SMM lockdown & firmware security. 💾 ~50MB | 📀 ~30MB", tags: ["oss", "free", "powerful"] },
+      { n: "FwHunt", cat: "hardware", d: 3, url: "https://github.com/binarly-io/fwhunt", desc: "Scan firmware image untuk known-bad patterns. 💾 ~100MB | 📀 ~50MB", tags: ["oss", "free"] },
+      { n: "Flashrom", cat: "hardware", d: 3, url: "https://flashrom.org/", desc: "Read/write SPI flash chip langsung. 💾 ~10MB | 📀 ~5MB", tags: ["oss", "free"] },
+      { n: "Qubes OS", cat: "hardware", d: 5, url: "https://www.qubes-os.org/", desc: "Security OS dengan disposable VM per-app. 💾 8GB+ | 📀 32GB+", tags: ["oss", "free", "powerful"] },
+
+      // ===== BOOT (Pre-Boot / Pre-OS) =====
+      { n: "GRUB2", cat: "boot", d: 3, url: "https://www.gnu.org/software/grub/", desc: "Bootloader dengan password + verified boot chain. 💾 N/A | 📀 ~5MB", tags: ["oss", "free"] },
+      { n: "rEFInd", cat: "boot", d: 2, url: "https://www.rodsbooks.com/refind/", desc: "UEFI boot manager dengan auto-detect OS. 💾 N/A | 📀 ~5MB", tags: ["oss", "free"] },
+      { n: "Secure Boot", cat: "boot", d: 2, url: "https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-secure-boot", desc: "UEFI boot verification — hanya trusted OS yang jalan. 💾 N/A | 📀 N/A", tags: ["free"] },
+      { n: "BitLocker", cat: "boot", d: 2, url: "https://learn.microsoft.com/windows/security/operating-system-security/data-protection/bitlocker/", desc: "Disk encryption + boot integrity (Win Pro+). 💾 N/A | 📀 N/A", tags: ["paid", "free"] },
+      { n: "VeraCrypt", cat: "boot", d: 2, url: "https://www.veracrypt.fr/", desc: "Disk encryption open source — hidden volume support. 💾 ~50MB | 📀 ~20MB", tags: ["oss", "free"] },
+      { n: "LUKS", cat: "boot", d: 3, url: "https://gitlab.com/cryptsetup/cryptsetup", desc: "Linux disk encryption standard. 💾 N/A | 📀 N/A", tags: ["oss", "free"] },
+      { n: "AIDE", cat: "boot", d: 3, url: "https://aide.github.io/", desc: "Boot sector integrity monitoring. 💾 ~20MB | 📀 ~10MB", tags: ["oss", "free"] },
+      { n: "PreLoader / HashTool", cat: "boot", d: 3, url: "https://blog.hansenpartnership.com/linux-foundation-secure-boot-system-released/", desc: "Enroll hash manual untuk Secure Boot custom. 💾 N/A | 📀 N/A", tags: ["oss", "free"] },
+
+      // ===== KERNEL (Ring 0) =====
+      { n: "Sysmon", cat: "kernel", d: 3, url: "https://learn.microsoft.com/sysinternals/downloads/sysmon", desc: "Log proses, driver, network di kernel level. 💾 ~50MB | 📀 ~5MB", tags: ["free", "powerful"] },
+      { n: "PatchGuard", cat: "kernel", d: 1, url: "https://learn.microsoft.com/windows-hardware/drivers/kernel/kernel-patch-protection", desc: "Monitor kernel structure critical — built-in Windows. 💾 N/A | 📀 N/A", tags: ["free"] },
+      { n: "DSE", cat: "kernel", d: 1, url: "https://learn.microsoft.com/windows-hardware/drivers/install/the-testsigning-boot-configuration-option", desc: "Driver Signature Enforcement — jangan dimatiin. 💾 N/A | 📀 N/A", tags: ["free"] },
+      { n: "WDAC", cat: "kernel", d: 4, url: "https://learn.microsoft.com/windows/security/application-security/application-control/windows-defender-application-control/wdac", desc: "Whitelist driver & aplikasi — block BYOVD. 💾 N/A | 📀 N/A", tags: ["free", "powerful"] },
+      { n: "Credential Guard", cat: "kernel", d: 2, url: "https://learn.microsoft.com/windows/security/identity-protection/credential-guard/", desc: "Isolasi LSASS di VSM — anti Mimikatz (Win Pro+). 💾 N/A | 📀 N/A", tags: ["paid", "free"] },
+      { n: "LSA Protection", cat: "kernel", d: 1, url: "https://learn.microsoft.com/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection", desc: "Protect LSA process dari credential dump. 💾 N/A | 📀 N/A", tags: ["free"] },
+      { n: "Falco", cat: "kernel", d: 3, url: "https://falco.org/", desc: "eBPF runtime security untuk container/Linux. 💾 ~200MB | 📀 ~50MB", tags: ["oss", "free", "powerful"] },
+      { n: "Tetragon", cat: "kernel", d: 4, url: "https://tetragon.io/", desc: "eBPF security observability + kill policy. 💾 ~100MB | 📀 ~30MB", tags: ["oss", "free"] },
+      { n: "Tracee", cat: "kernel", d: 3, url: "https://aquasecurity.github.io/tracee/", desc: "eBPF event-based tracing & detection. 💾 ~150MB | 📀 ~40MB", tags: ["oss", "free"] },
+      { n: "HyperDbg", cat: "kernel", d: 5, url: "https://hyperdbg.org/", desc: "Debugger ring-0 hardware-assisted (Intel VT-x). 💾 ~100MB | 📀 ~50MB", tags: ["oss", "free", "powerful"] },
+      { n: "WinDbg", cat: "kernel", d: 4, url: "https://learn.microsoft.com/windows-hardware/drivers/debugger/", desc: "Windows kernel debugger — gratis dari Microsoft. 💾 ~200MB | 📀 ~100MB", tags: ["free"] },
+
+      // ===== DEFENSE (Ring 3 — AV / Behavior) =====
+      { n: "KVRT", cat: "defense", d: 1, url: "https://www.kaspersky.com/downloads/threat-removal-tool", desc: "Kaspersky portable scanner — engine penuh, no install. 💾 ~200MB | 📀 ~150MB", tags: ["freeware", "powerful"] },
+      { n: "Malwarebytes Free", cat: "defense", d: 1, url: "https://www.malwarebytes.com/mwb-download", desc: "On-demand adware & PUP scanner terbaik. 💾 ~150MB | 📀 ~100MB", tags: ["freeware"] },
+      { n: "ESET Online Scanner", cat: "defense", d: 1, url: "https://www.eset.com/int/home/online-scanner/", desc: "Scan cloud-based via browser — tanpa residen. 💾 N/A | 📀 N/A", tags: ["freeware"] },
+      { n: "Dr.Web CureIt!", cat: "defense", d: 1, url: "https://free.drweb.ru/cureit/", desc: "Portable scanner — hapus malware aktif. 💾 ~300MB | 📀 ~200MB", tags: ["freeware"] },
+      { n: "ClamAV", cat: "defense", d: 2, url: "https://www.clamav.net/", desc: "Open source AV engine — signature based. 💾 ~500MB | 📀 ~1GB", tags: ["oss", "free"] },
+      { n: "OSArmor", cat: "defense", d: 2, url: "https://www.novirusthanks.org/products/osarmor/", desc: "Behavior blocker — blok ransomware & injeksi real-time. 💾 ~20MB | 📀 ~10MB", tags: ["freeware", "powerful"] },
+      { n: "Hard_Configurator", cat: "defense", d: 2, url: "https://github.com/pylsar/Hard_Configurator", desc: "GUI lockdown Windows — disable macro, block script. 💾 ~30MB | 📀 ~15MB", tags: ["freeware"] },
+      { n: "SysHardener", cat: "defense", d: 1, url: "https://www.novirusthanks.org/products/syshardener/", desc: "One-click Windows hardening & restriction. 💾 ~10MB | 📀 ~5MB", tags: ["freeware"] },
+      { n: "Simple Software Restriction Policy", cat: "defense", d: 2, url: "https://github.com/marcosveloso/SSRP", desc: "Policy-based application restriction via registry. 💾 N/A | 📀 N/A", tags: ["oss", "free"] },
+
+      // ===== ISOLATION =====
+      { n: "Sandboxie Plus", cat: "isolation", d: 2, url: "https://sandboxie-plus.com/", desc: "Jalankan app/browser dalam sandbox terisolasi. 💾 ~50MB | 📀 ~30MB", tags: ["oss", "free", "powerful"] },
+      { n: "Windows Sandbox", cat: "isolation", d: 2, url: "https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/", desc: "Instance Windows bersih & terisolasi (Win Pro+). 💾 ~4GB | 📀 ~8GB", tags: ["paid", "free"] },
+      { n: "Firejail", cat: "isolation", d: 2, url: "https://firejail.wordpress.com/", desc: "Linux app sandbox dengan profile ribuan app. 💾 ~10MB | 📀 ~5MB", tags: ["oss", "free"] },
+      { n: "Docker Desktop", cat: "isolation", d: 3, url: "https://www.docker.com/products/docker-desktop/", desc: "Container isolation untuk testing & dev. 💾 ~2GB | 📀 ~5GB", tags: ["freeware"] },
+
+      // ===== NETWORK =====
+      { n: "Suricata", cat: "network", d: 3, url: "https://suricata.io/", desc: "IDS/IPS network — deteksi threat berbasis rules. 💾 ~500MB | 📀 ~50MB", tags: ["oss", "free", "powerful"] },
+      { n: "Zeek", cat: "network", d: 3, url: "https://zeek.org/", desc: "Network analysis framework — log semua koneksi detail. 💾 ~1GB | 📀 ~100MB", tags: ["oss", "free", "powerful"] },
+      { n: "RITA", cat: "network", d: 3, url: "https://github.com/activecm/rita", desc: "C2 beaconing detection dari Zeek logs. 💾 ~500MB | 📀 ~200MB", tags: ["oss", "free"] },
+      { n: "Wireshark", cat: "network", d: 2, url: "https://www.wireshark.org/", desc: "Packet analyzer — decode 2000+ protocol. 💾 ~300MB | 📀 ~150MB", tags: ["oss", "free"] },
+      { n: "Brim / Zed", cat: "network", d: 3, url: "https://www.brimdata.io/", desc: "PCAP analysis modern — search packet kayak Google. 💾 ~200MB | 📀 ~100MB", tags: ["oss", "free"] },
+
+      // ===== FORENSICS =====
+      { n: "PE-sieve", cat: "forensics", d: 3, url: "https://github.com/hasherezade/pe-sieve", desc: "Deteksi process injection & hollowing real-time. 💾 ~50MB | 📀 ~5MB", tags: ["oss", "free", "powerful"] },
+      { n: "Hollows_Hunter", cat: "forensics", d: 3, url: "https://github.com/hasherezade/hollows_hunter", desc: "Deteksi process hollowing & malicious memory. 💾 ~30MB | 📀 ~5MB", tags: ["oss", "free"] },
+      { n: "Moneta", cat: "forensics", d: 3, url: "https://github.com/forrest-orr/moneta", desc: "Pure memory anomaly scanner — fileless detection. 💾 ~40MB | 📀 ~5MB", tags: ["oss", "free"] },
+      { n: "Volatility", cat: "forensics", d: 4, url: "https://www.volatilityfoundation.org/", desc: "RAM dump analysis — cari malware fileless. 💾 depends | 📀 ~100MB", tags: ["oss", "free", "powerful"] },
+      { n: "MemProcFS", cat: "forensics", d: 4, url: "https://github.com/ufrisk/MemProcFS", desc: "Mount RAM dump sebagai filesystem. 💾 depends | 📀 ~20MB", tags: ["oss", "free"] },
+      { n: "Chainsaw", cat: "forensics", d: 3, url: "https://github.com/WithSecureLabs/chainsaw", desc: "Sigma rules on Windows Event Logs — cepat. 💾 ~100MB | 📀 ~20MB", tags: ["oss", "free", "powerful"] },
+      { n: "LOKI", cat: "forensics", d: 3, url: "https://github.com/Neo23x0/Loki", desc: "IOC scanner — file, registry, memory. 💾 ~100MB | 📀 ~50MB", tags: ["oss", "free"] },
+      { n: "YARA", cat: "forensics", d: 3, url: "https://virustotal.github.io/yara/", desc: "Pattern matching untuk deteksi malware custom. 💾 ~50MB | 📀 ~10MB", tags: ["oss", "free", "powerful"] },
+      { n: "yarGen", cat: "forensics", d: 4, url: "https://github.com/Neo23x0/yarGen", desc: "Generate YARA rules otomatis dari sample. 💾 ~100MB | 📀 ~20MB", tags: ["oss", "free"] },
+
+      // ===== WARNING ZONE =====
+      { n: "Wazuh", cat: "warning", d: 4, url: "https://wazuh.com/", desc: "Open source EDR/SIEM — log, FIM, threat detection. 💾 ~2GB | 📀 ~500MB", tags: ["oss", "free", "powerful"] },
+      { n: "Aurora Agent", cat: "warning", d: 3, url: "https://www.nextron-systems.com/aurora/", desc: "Sigma-based detection real-time di endpoint. 💾 ~200MB | 📀 ~50MB", tags: ["freeware", "powerful"] },
+      { n: "Velociraptor", cat: "warning", d: 4, url: "https://docs.velociraptor.app/", desc: "Endpoint visibility & hunting via VQL query. 💾 ~500MB | 📀 ~200MB", tags: ["oss", "free", "powerful"] },
+      { n: "DTrace Windows", cat: "warning", d: 4, url: "https://www.microsoft.com/download/details.aspx?id=100441", desc: "Dynamic tracing kernel Windows/Linux. 💾 ~50MB | 📀 ~30MB", tags: ["free"] },
+
+      // ===== DANGER ZONE =====
+      { n: "THOR Lite", cat: "danger", d: 4, url: "https://www.nextron-systems.com/thor-lite/", desc: "APT scanner limited edition — forensik cepat. 💾 ~200MB | 📀 ~100MB", tags: ["freeware", "powerful"] },
+      { n: "Rekall", cat: "danger", d: 5, url: "https://github.com/google/rekall", desc: "Memory forensics framework — successor Volatility. 💾 depends | 📀 ~150MB", tags: ["oss", "free"] },
+      { n: "WinDbg Preview", cat: "danger", d: 4, url: "https://apps.microsoft.com/detail/9pgjgd53tn86", desc: "Modern kernel debugger dengan UI baru. 💾 ~300MB | 📀 ~150MB", tags: ["free"] },
+      { n: "KVM", cat: "danger", d: 4, url: "https://linux-kvm.org/", desc: "Kernel-based virtualization — type-1 hypervisor. 💾 ~1GB+ overhead | 📀 N/A", tags: ["oss", "free", "powerful"] },
+    ];
+
+    let activeCat = 'all';
+
+    const legend = `<div class="legend">
+      <span class="legend-item">● tingkat kesulitan (1–5)</span>
+      <div class="legend-group">
+        <span class="tag-pill tag-success">free</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">gratis / built-in</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-info">oss</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">open source</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-warning">freeware</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">gratis tapi closed source</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-danger">paid</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">butuh lisensi / edition berbayar</span>
+      </div>
+      <div class="legend-group">
+        <span class="tag-pill tag-warning">powerful</span>
+        <span class="legend-label" style="font-size:11px;color:var(--color-text-secondary)">tidak viral tapi dahsyat</span>
+      </div>
+    </div>`;
+    document.querySelector('.roadmap-wrapper').insertAdjacentHTML('beforeend', legend);
+
+    initArsenal();
+  </script>
+</body>
+
+</html>
