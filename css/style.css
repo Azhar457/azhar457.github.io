@@ -1,166 +1,319 @@
-/* Custom Variables */
+/* ══════════════════════════════════════════════════════════════
+   PORTFOLIO — Azhar Muttaqien
+   Enhanced UI with micro-interactions, particles, 3D tilt
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Variables (Dark Only) ──────────────────────────────────── */
 :root {
   --bg-primary: #020617;
   --bg-secondary: #0f172a;
-  --accent-indigo: #6366f1;
-  --accent-purple: #a855f7;
-  --accent-cyan: #06b6d4;
-  --accent-emerald: #10b981;
+  --bg-card: rgba(255,255,255,0.03);
+  --border-subtle: rgba(255,255,255,0.08);
+  --accent-1: #6366f1;
+  --accent-2: #a855f7;
+  --accent-3: #06b6d4;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
+  --glass-bg: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.08);
 }
 
-/* Base Styles */
-body {
-  scroll-behavior: smooth;
+/* ── Base ─────────────────────────────────────────────────────── */
+body { scroll-behavior: smooth; }
+
+/* ── Loading Fade ─────────────────────────────────────────────── */
+.page-loader {
+  position: fixed; inset: 0;
+  z-index: 9999;
+  background: var(--bg-primary);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--accent-1);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+body.loaded { opacity: 1; }
+
+/* ── Scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+::selection { background: rgba(99,102,241,0.3); color: white; }
+
+/* ── Scroll Progress Bar ──────────────────────────────────────── */
+#scroll-progress {
+  position: fixed; top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+  z-index: 9998;
+  width: 0%;
+  transition: width 0.1s linear;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #0f172a;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
-
-/* Selection */
-::selection {
-  background: rgba(99, 102, 241, 0.3);
-  color: white;
-}
-
-/* Glass Effects */
+/* ── Glass Utility ────────────────────────────────────────────── */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
 }
 
-.glass-strong {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-/* Navbar Scrolled State */
+/* ── Navbar ────────────────────────────────────────────────────── */
 #navbar.scrolled {
-  background: rgba(2, 6, 23, 0.8);
+  background: color-mix(in srgb, var(--bg-primary) 80%, transparent);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
 }
 
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-/* Navbar Link Indicator */
 .nav-link {
-    position: relative;
+  position: relative;
+  transition: color 0.3s;
 }
-
+.nav-link.active {
+  color: var(--accent-1);
+}
 .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #6366f1, #a855f7);
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-    border-radius: 2px;
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+  border-radius: 2px;
 }
+.nav-link:hover::after,
+.nav-link.active::after { width: 60%; }
 
-.nav-link:hover::after {
-    width: 60%;
-}
-
-/* Mobile Menu Animation */
+/* ── Mobile Menu ──────────────────────────────────────────────── */
 #mobile-menu.open {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+#mobile-menu-btn.open #line-1 { transform: translateY(8px) rotate(45deg); }
+#mobile-menu-btn.open #line-2 { opacity: 0; }
+#mobile-menu-btn.open #line-3 { transform: translateY(-8px) rotate(-45deg); }
+
+/* ── Hero Particles Canvas ────────────────────────────────────── */
+#particles-canvas {
+  position: absolute; inset: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
-/* Hamburger Icon Animation */
-#mobile-menu-btn.open #line-1 {
-    transform: translateY(8px) rotate(45deg);
-}
-#mobile-menu-btn.open #line-2 {
-    opacity: 0;
-}
-#mobile-menu-btn.open #line-3 {
-    transform: translateY(-8px) rotate(-45deg);
+/* ── Theme Toggle ──────────────────────────────────────────────── */
+.theme-toggle {
+  display: none;
 }
 
-/* Form Styles */
-.form-input:focus {
-    border-color: var(--accent-indigo);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+/* ── 3D Tilt Card ────────────────────────────────────────────── */
+.tilt-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
 }
+.tilt-card-inner {
+  transition: transform 0.1s ease;
+  transform-style: preserve-3d;
+}
+.tilt-card:hover .tilt-card-inner {
+  transform: rotateX(var(--rot-x, 0deg)) rotateY(var(--rot-y, 0deg));
+}
+.tilt-card-glow {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), 
+    rgba(99,102,241,0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.tilt-card:hover .tilt-card-glow { opacity: 1; }
 
-/* Project Card Hover */
+/* ── Project Card ─────────────────────────────────────────────── */
 .project-card {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
 }
-
 .project-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(99, 102, 241, 0.5);
-    box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.1);
+  transform: translateY(-8px);
+  border-color: rgba(99,102,241,0.5);
+  box-shadow: 0 25px 50px -12px rgba(99,102,241,0.1);
 }
-
 .project-image-container img {
-    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
 }
-
 .project-card:hover .project-image-container img {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
-/* Skills Grid */
-.skill-bar {
-    position: relative;
-    overflow: hidden;
+/* ── Project Modal ────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  z-index: 9997;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: all 0.3s;
+  padding: 1rem;
+}
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal-content {
+  max-width: 600px; width: 100%;
+  max-height: 85vh; overflow-y: auto;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s;
+}
+.modal-overlay.open .modal-content {
+  transform: scale(1) translateY(0);
+}
+.modal-close {
+  position: absolute; top: 1rem; right: 1rem;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+}
+.modal-close:hover { background: var(--accent-1); color: white; }
+
+/* ── Skill Icons Grid ────────────────────────────────────────── */
+.skill-icon-card {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.3s;
+  cursor: default;
+}
+.skill-icon-card:hover {
+  background: color-mix(in srgb, var(--accent-1) 10%, var(--bg-card));
+  border-color: var(--accent-1);
+  transform: translateY(-4px);
+}
+.skill-icon-card .icon-wrap {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  transition: transform 0.3s;
+}
+.skill-icon-card:hover .icon-wrap { transform: scale(1.1); }
+.skill-icon-card .skill-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+  font-weight: 500;
 }
 
-.skill-progress {
-    transition: width 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+/* ── Counter Animation ────────────────────────────────────────── */
+.stat-number {
+  display: inline-block;
 }
 
-/* Section Transitions */
-section {
-    position: relative;
-    z-index: 1;
+/* ── Typewriter ──────────────────────────────────────────────── */
+.typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: var(--accent-1);
+  margin-left: 2px;
+  animation: blink 0.8s step-end infinite;
+  vertical-align: text-bottom;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── Filter Buttons Active ────────────────────────────────────── */
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2)) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.25) !important;
+}
+
+/* ── Form ──────────────────────────────────────────────────────── */
+.form-input:focus {
+  border-color: var(--accent-1) !important;
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.1) !important;
+}
+
+/* ── Section Divider ───────────────────────────────────────────── */
+.section-transition {
+  position: relative;
+}
+.section-transition::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+}
+
+/* ── Sticky About Column ───────────────────────────────────────── */
+.about-sticky-col {
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+}
+.about-scroll-col {
+  /* no internal scroll — child wrapper below handles it */
+}
+
+.about-skills-scroll-wrapper {
+  max-height: 380px;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  overscroll-behavior-y: contain;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15px, black calc(100% - 15px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15px, black calc(100% - 15px), transparent 100%);
+}
+
+@media (min-width: 1024px) {
+  .about-skills-scroll-wrapper {
+    max-height: 450px;
+  }
+}
+
+.about-skills-scroll-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+
+/* ── Skill Icon with Iconify ──────────────────────────────────── */
+.skill-icon-card .iconify-wrap {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.75rem;
+  transition: transform 0.3s;
+}
+.skill-icon-card:hover .iconify-wrap { transform: scale(1.1); }
+
+/* ── Responsive Tweaks ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .modal-content { padding: 1.25rem; }
+  .skill-icon-card { padding: 0.75rem; }
+  .skill-icon-card .icon-wrap { width: 40px; height: 40px; font-size: 1.25rem; }
 }
