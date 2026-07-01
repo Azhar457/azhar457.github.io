@@ -231,7 +231,7 @@ function renderSkillsGrid() {
   let html = '';
   for (const [key, skills] of Object.entries(groups)) {
     const meta = SKILL_GROUP_META[key];
-    html += `<div class="mb-6">
+    html += `<div class="mb-6 p-2">
       <div class="flex items-center gap-2 mb-3">
         <i class="${meta.icon} text-sm text-indigo-400"></i>
         <span class="text-xs font-semibold tracking-wider uppercase text-slate-500">${meta.label}</span>
