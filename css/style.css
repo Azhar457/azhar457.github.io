@@ -104,9 +104,9 @@ body.loaded { opacity: 1; }
 #mobile-menu-btn.open #line-2 { opacity: 0; }
 #mobile-menu-btn.open #line-3 { transform: translateY(-8px) rotate(-45deg); }
 
-/* ── Hero Particles Canvas ────────────────────────────────────── */
-#particles-canvas {
-  position: absolute; inset: 0;
+/* ── Global Particles Canvas ────────────────────────────────────── */
+#global-particles {
+  position: fixed; inset: 0;
   z-index: 1;
   pointer-events: none;
 }
@@ -316,4 +316,18 @@ body.loaded { opacity: 1; }
   .modal-content { padding: 1.25rem; }
   .skill-icon-card { padding: 0.75rem; }
   .skill-icon-card .icon-wrap { width: 40px; height: 40px; font-size: 1.25rem; }
+}
+
+/* ── Reduced Motion (mandatory per design-taste-frontend §6.B) ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  #particles-canvas { display: none; }
+  .animate-bounce, .animate-float, .animate-pulse-glow { animation: none !important; }
+  .project-card:hover { transform: none; }
+  .tilt-card:hover .tilt-card-inner { transform: none; }
 }

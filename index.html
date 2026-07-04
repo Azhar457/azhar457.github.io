@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azhar Muttaqien — Portfolio</title>
+    <title>Azhar Muttaqien - Portfolio</title>
     <meta name="description"
-         content="Portfolio of Azhar Muttaqien — Web Developer, Infrastructure Engineer, and Security Researcher at Universitas Pasundan.">
+         content="Portfolio of Azhar Muttaqien - Web Developer, Infrastructure Engineer, and Security Researcher at Universitas Pasundan.">
     <link rel="icon" href="assets/favicon.ico">
 
-    <!-- 🔒 Content Security Policy — batasi script/style dari sumber tepercaya -->
+    <!-- 🔒 Content Security Policy - batasi script/style dari sumber tepercaya -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://code.iconify.design https://unpkg.com https://cdnjs.cloudflare.com;
@@ -83,6 +83,9 @@
 </head>
 
 <body class="bg-slate-950 text-slate-50 font-sans antialiased overflow-x-hidden">
+
+    <!-- Global Particles Canvas (fixed, covers all sections) -->
+    <canvas id="global-particles" aria-hidden="true"></canvas>
 
     <!-- Global Background (fixed, applied to every section) -->
     <div id="page-bg" class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -193,8 +196,6 @@
 
     <!-- Hero Section -->
     <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <!-- Particles Canvas -->
-        <canvas id="particles-canvas"></canvas>
 
             <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center" data-aos="zoom-out"
             data-aos-duration="1000">
@@ -242,8 +243,8 @@
                 </a>
             </div>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto">
+            <!-- Stats (back in hero) -->
+            <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto" data-aos="fade-up" data-aos-delay="400">
                 <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
                     <div
                         class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent font-outfit">
@@ -266,15 +267,7 @@
                     <div class="text-xs text-slate-600 mt-0.5">Experience</div>
                 </div>
             </div>
-        </div>
 
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-            <div class="flex flex-col items-center gap-2 text-slate-500">
-                <span class="text-xs tracking-widest uppercase">Scroll</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-        </div>
     </section>
 
     <!-- About Section -->
@@ -282,9 +275,6 @@
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-20" data-aos="fade-up">
-                <span
-                    class="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-sm font-medium mb-4 border border-indigo-500/20">About
-                    Me</span>
                 <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6 font-outfit">Get To Know <span
                         class="text-indigo-400">Me</span></h2>
                 <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>
@@ -336,7 +326,7 @@
                     <div class="space-y-4">
                         <h3 class="text-2xl font-bold text-white font-outfit">Who am I?</h3>
                         <p class="text-slate-400 leading-relaxed">
-                            Mahasiswa Teknik Informatika di Universitas Pasundan dengan ketertarikan pada pengembangan web, infrastruktur modern, dan security research. Keseharian berkutat pada eksperimen teknologi — dari self-hosting server hingga automation infrastructure.
+                            Mahasiswa Teknik Informatika di Universitas Pasundan dengan ketertarikan pada pengembangan web, infrastruktur modern, dan security research. Keseharian berkutat pada eksperimen teknologi - dari self-hosting server hingga automation infrastructure.
                         </p>
                     </div>
 
@@ -351,7 +341,7 @@
                                     <p class="text-xs text-slate-500 uppercase tracking-wider">Education</p>
                                     <p
                                         class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">
-                                        Teknik Informatika — UNPAS</p>
+                                        Teknik Informatika - UNPAS</p>
                                 </div>
                             </div>
                         </div>
@@ -483,9 +473,6 @@
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16" data-aos="fade-up">
-                <span
-                    class="inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-4 border border-cyan-500/20">Let's
-                    Connect</span>
                 <h2 class="text-4xl sm:text-5xl font-bold text-white mb-6 font-outfit">Get In <span
                         class="text-cyan-400">Touch</span></h2>
                 <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>

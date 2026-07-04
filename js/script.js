@@ -117,67 +117,312 @@ function initScrollProgress() {
   });
 }
 
-/* ── Particles (fallback starfield via canvas) ───────────────── */
+/* ── Global Particles (galaxy nebula + cursor trail + click blackhole) ── */
 function initParticles() {
-  const canvas = document.getElementById('particles-canvas');
+  const canvas = document.getElementById('global-particles');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  let w, h, stars = [];
-  const COUNT = 120;
 
-  function resize() {
-    const hero = document.getElementById('home');
-    w = canvas.width = hero.offsetWidth;
-    h = canvas.height = hero.offsetHeight;
-  }
+  const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let prefersReducedMotion = mql.matches;
 
-  function initStars() {
+  let w, h;
+  let stars = [];          // galaxy starfield
+  let nebula = [];         // slow dust/nebula clouds
+  let trailParticles = []; // cursor trail
+  let blackholes = [];    // click blackholes
+
+  // Cursor
+  let mouseX = -1000, mouseY = -1000;
+  let isMouseInside = false;
+  let lastMouseX = 0, lastMouseY = 0;
+
+  const MAX_STARS = 160;
+  const MAX_NEBULA = 12;
+  const MAX_TRAIL = 100;
+  const MAX_BLACKHOLES = 5;
+
+  // ── Galaxy setup ──
+  function initGalaxy() {
     stars = [];
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < MAX_STARS; i++) {
       stars.push({
         x: Math.random() * w, y: Math.random() * h,
-        r: Math.random() * 1.5 + 0.5,
-        dx: (Math.random() - 0.5) * 0.3,
-        dy: (Math.random() - 0.5) * 0.3,
-        o: Math.random() * 0.5 + 0.2,
+        r: 0.5 + Math.random() * 2.5,
+        // Color: mix of white, cyan, indigo, purple
+        hue: 200 + Math.random() * 40 + (Math.random() < 0.3 ? 30 : 0), // 200-270 base
+        sat: 30 + Math.random() * 50,
+        light: 60 + Math.random() * 35,
+        o: 0.3 + Math.random() * 0.5,
+        dx: (Math.random() - 0.5) * 0.15,
+        dy: (Math.random() - 0.5) * 0.15,
+        twinkle: Math.random() * Math.PI * 2,
+        twinkleSpeed: 0.005 + Math.random() * 0.02,
+      });
+    }
+    // Nebula clouds (big soft blobs)
+    nebula = [];
+    for (let i = 0; i < MAX_NEBULA; i++) {
+      nebula.push({
+        x: Math.random() * w, y: Math.random() * h,
+        r: 60 + Math.random() * 120,
+        hue: 250 + Math.random() * 40,      // purple-indigo range
+        o: 0.03 + Math.random() * 0.06,
+        dx: (Math.random() - 0.5) * 0.05,
+        dy: (Math.random() - 0.5) * 0.05,
       });
     }
   }
 
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
-    stars.forEach(s => {
+  function drawGalaxy() {
+    // 1. Nebula clouds (behind stars)
+    for (const n of nebula) {
+      n.x += n.dx; n.y += n.dy;
+      if (n.x < -n.r) n.x = w + n.r;
+      if (n.x > w + n.r) n.x = -n.r;
+      if (n.y < -n.r) n.y = h + n.r;
+      if (n.y > h + n.r) n.y = -n.r;
+      const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
+      grad.addColorStop(0, `hsla(${n.hue}, 60%, 50%, ${n.o})`);
+      grad.addColorStop(0.5, `hsla(${n.hue + 20}, 50%, 40%, ${n.o * 0.5})`);
+      grad.addColorStop(1, `hsla(${n.hue - 10}, 40%, 30%, 0)`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(n.x - n.r, n.y - n.r, n.r * 2, n.r * 2);
+    }
+
+    // 2. Stars
+    for (const s of stars) {
       s.x += s.dx; s.y += s.dy;
-      if (s.x < 0) s.x = w; if (s.x > w) s.x = 0;
-      if (s.y < 0) s.y = h; if (s.y > h) s.y = 0;
+      if (s.x < -5) s.x = w + 5;
+      if (s.x > w + 5) s.x = -5;
+      if (s.y < -5) s.y = h + 5;
+      if (s.y > h + 5) s.y = -5;
+      s.twinkle += s.twinkleSpeed;
+      const twinkle = 0.7 + Math.sin(s.twinkle) * 0.3;
+      const alpha = s.o * twinkle;
+      const glow = s.r > 1.8; // big stars get glow
+
+      if (glow) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${s.hue}, ${s.sat}%, ${s.light}%, ${alpha * 0.2})`;
+        ctx.fill();
+      }
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${s.o})`;
+      ctx.fillStyle = `hsla(${s.hue}, ${s.sat}%, ${s.light}%, ${alpha})`;
       ctx.fill();
-    });
-    // connections
-    for (let i = 0; i < stars.length; i++) {
-      for (let j = i + 1; j < stars.length; j++) {
-        const dx = stars[i].x - stars[j].x;
-        const dy = stars[i].y - stars[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
+    }
+
+    // 3. Connection lines between nearby stars (only big ones, sparse)
+    const bigStars = stars.filter(s => s.r > 1.5);
+    for (let i = 0; i < bigStars.length; i += 2) {
+      for (let j = i + 1; j < bigStars.length; j += 2) {
+        const dx = bigStars[i].x - bigStars[j].x;
+        const dy = bigStars[i].y - bigStars[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 100) {
           ctx.beginPath();
-          ctx.moveTo(stars[i].x, stars[i].y);
-          ctx.lineTo(stars[j].x, stars[j].y);
-          ctx.strokeStyle = `rgba(99,102,241,${0.08 * (1 - dist / 120)})`;
-          ctx.lineWidth = 0.5;
+          ctx.moveTo(bigStars[i].x, bigStars[i].y);
+          ctx.lineTo(bigStars[j].x, bigStars[j].y);
+          ctx.strokeStyle = `hsla(230, 60%, 70%, ${0.06 * (1 - d / 100)})`;
+          ctx.lineWidth = 0.3;
           ctx.stroke();
         }
       }
     }
+  }
+
+  // ── Blackhole ──
+  function spawnBlackhole(x, y) {
+    if (blackholes.length >= MAX_BLACKHOLES) blackholes.shift();
+    blackholes.push({
+      x, y,
+      radius: 10,
+      maxRadius: 80 + Math.random() * 40,
+      strength: 0.3 + Math.random() * 0.2,
+      life: 0,
+      maxLife: 180 + Math.random() * 60,
+      phase: 0,
+    });
+  }
+
+  function drawBlackholes() {
+    for (let i = blackholes.length - 1; i >= 0; i--) {
+      const bh = blackholes[i];
+      bh.life++;
+      bh.phase += 0.05;
+      const progress = bh.life / bh.maxLife;
+      if (progress < 0.3) {
+        bh.radius = 10 + (bh.maxRadius - 10) * (progress / 0.3);
+      } else {
+        bh.radius = bh.maxRadius * (1 - (progress - 0.3) / 0.7);
+      }
+      if (bh.life >= bh.maxLife || bh.radius <= 2) {
+        blackholes.splice(i, 1);
+        continue;
+      }
+      // Draw
+      const grad = ctx.createRadialGradient(bh.x, bh.y, 0, bh.x, bh.y, bh.radius);
+      grad.addColorStop(0, 'rgba(0,0,0,0.95)');
+      grad.addColorStop(0.2, 'rgba(0,0,0,0.8)');
+      grad.addColorStop(0.5, 'rgba(30,0,50,0.3)');
+      grad.addColorStop(1, 'rgba(99,102,241,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, bh.radius, 0, Math.PI * 2);
+      ctx.fill();
+      // Ring
+      const pulse = 0.5 + Math.sin(bh.phase) * 0.3;
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, bh.radius * pulse * 0.8, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(99,102,241,${0.15 * (1 - progress)})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      // Suck ring
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, bh.radius * 0.3, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255,255,255,${0.08 * (1 - progress)})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+
+  function applyBlackholePull() {
+    for (const bh of blackholes) {
+      const r = bh.radius;
+      const str = bh.strength;
+      // Suck stars
+      for (let i = stars.length - 1; i >= 0; i--) {
+        const s = stars[i];
+        const dx = bh.x - s.x;
+        const dy = bh.y - s.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < r && d > 0) {
+          const pull = str * (1 - d / r);
+          s.dx += (dx / d) * pull * 0.5;
+          s.dy += (dy / d) * pull * 0.5;
+          s.r = Math.max(0.3, s.r - pull * 0.3); // shrink as sucked
+          if (d < 6 || s.r < 0.3) {
+            stars.splice(i, 1);
+            // Respawn new star at random edge
+            const side = Math.floor(Math.random() * 4);
+            stars.push({
+              x: side === 0 ? -5 : side === 1 ? w + 5 : Math.random() * w,
+              y: side === 2 ? -5 : side === 3 ? h + 5 : Math.random() * h,
+              r: 0.5 + Math.random() * 2.5,
+              hue: 200 + Math.random() * 40 + (Math.random() < 0.3 ? 30 : 0),
+              sat: 30 + Math.random() * 50,
+              light: 60 + Math.random() * 35,
+              o: 0.3 + Math.random() * 0.5,
+              dx: (Math.random() - 0.5) * 0.15,
+              dy: (Math.random() - 0.5) * 0.15,
+              twinkle: Math.random() * Math.PI * 2,
+              twinkleSpeed: 0.005 + Math.random() * 0.02,
+            });
+            continue;
+          }
+        }
+      }
+      // Suck trail particles
+      for (let i = trailParticles.length - 1; i >= 0; i--) {
+        const p = trailParticles[i];
+        const dx = bh.x - p.x;
+        const dy = bh.y - p.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < r && d > 0) {
+          const pull = str * (1 - d / r) * 3;
+          p.vx += (dx / d) * pull;
+          p.vy += (dy / d) * pull;
+          if (d < 5) trailParticles.splice(i, 1);
+        }
+      }
+    }
+  }
+
+  // ── Click handler (document-level, only if click not on interactive element) ──
+  document.addEventListener('click', e => {
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    if (!target) return;
+    const tag = target.tagName.toLowerCase();
+    // Skip clicks on interactive elements
+    if (['a', 'button', 'input', 'textarea', 'select'].includes(tag)) return;
+    if (target.closest('a, button, nav, .project-card')) return;
+    spawnBlackhole(e.clientX, e.clientY);
+  });
+
+  // ── Resize ──
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+
+  // ── Mouse ──
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; isMouseInside = true; });
+  document.addEventListener('mouseleave', () => { isMouseInside = false; });
+
+  // ── Cursor trail ──
+  function drawTrail() {
+    if (prefersReducedMotion) return;
+    const vx = mouseX - lastMouseX;
+    const vy = mouseY - lastMouseY;
+    lastMouseX = mouseX; lastMouseY = mouseY;
+    if (isMouseInside) {
+      for (let i = 0; i < (Math.random() < 0.5 ? 1 : 2); i++) {
+        if (trailParticles.length >= MAX_TRAIL) trailParticles.shift();
+        trailParticles.push({
+          x: mouseX + (Math.random() - 0.5) * 6,
+          y: mouseY + (Math.random() - 0.5) * 6,
+          r: Math.random() * 2 + 1,
+          vx: vx * 0.3 + (Math.random() - 0.5) * 0.4,
+          vy: vy * 0.3 + (Math.random() - 0.5) * 0.4,
+          life: 30 + Math.random() * 25, maxLife: 55,
+          hue: 120 + Math.random() * 60,
+          brightness: 0.6 + Math.random() * 0.4,
+        });
+      }
+    }
+    for (let i = trailParticles.length - 1; i >= 0; i--) {
+      const p = trailParticles[i];
+      p.x += p.vx; p.y += p.vy;
+      p.vx *= 0.95; p.vy *= 0.95;
+      p.life -= 1;
+      const a = (p.life / p.maxLife) * p.brightness * 0.7;
+      if (a <= 0) { trailParticles.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 100%, 65%, ${a})`;
+      ctx.fill();
+    }
+  }
+
+  // ── Draw loop ──
+  function draw() {
+    if (prefersReducedMotion) {
+      ctx.clearRect(0, 0, w, h);
+      stars.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${s.hue}, ${s.sat}%, ${s.light}%, ${s.o * 0.5})`;
+        ctx.fill();
+      });
+      return;
+    }
+    ctx.clearRect(0, 0, w, h);
+
+    drawGalaxy();
+    applyBlackholePull();
+    drawBlackholes();
+    drawTrail();
+
     requestAnimationFrame(draw);
   }
 
+  mql.addEventListener('change', e => { prefersReducedMotion = e.matches; });
   resize();
-  initStars();
+  initGalaxy();
   draw();
-  window.addEventListener('resize', () => { resize(); initStars(); });
+  window.addEventListener('resize', resize);
 }
 
 /* ── Typewriter ──────────────────────────────────────────────── */
