@@ -3,6 +3,29 @@
    Enhanced: particles, 3D tilt, typewriter, modal, theme, counter
    ══════════════════════════════════════════════════════════════ */
 
+/* ── Theme Switcher Logic ────────────────────────────────────── */
+window.setTheme = function(themeName) {
+  const root = document.documentElement;
+  root.className = 'scroll-smooth theme-' + themeName;
+  localStorage.setItem('portfolio-theme', themeName);
+  
+  // Dispatch custom event to let particles know the theme has changed
+  window.dispatchEvent(new CustomEvent('theme-changed', { detail: themeName }));
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('portfolio-theme');
+  if (savedTheme) {
+    window.setTheme(savedTheme);
+  } else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    window.setTheme(prefersDark ? 'dark' : 'light');
+  }
+}
+
+// Call theme init immediately
+initTheme();
+
 /* ── Data ────────────────────────────────────────────────────── */
 const SKILLS = [
   // Languages & Scripting
@@ -146,17 +169,32 @@ function initParticles() {
   const MAX_TRAIL = 100;
   const MAX_BLACKHOLES = 5;
 
+  function getThemeParticleConfig() {
+    const root = document.documentElement;
+    if (root.classList.contains('theme-light')) {
+      return { hueMin: 220, hueMax: 260, sat: 85, light: 45, nebulaHue: 240 };
+    } else if (root.classList.contains('theme-orange')) {
+      return { hueMin: 15, hueMax: 45, sat: 95, light: 55, nebulaHue: 25 };
+    } else if (root.classList.contains('theme-sea')) {
+      return { hueMin: 160, hueMax: 195, sat: 95, light: 50, nebulaHue: 175 };
+    } else {
+      // theme-dark (default)
+      return { hueMin: 240, hueMax: 280, sat: 80, light: 65, nebulaHue: 260 };
+    }
+  }
+
   // ── Galaxy setup ──
   function initGalaxy() {
+    const config = getThemeParticleConfig();
     stars = [];
     for (let i = 0; i < MAX_STARS; i++) {
       stars.push({
         x: Math.random() * w, y: Math.random() * h,
         r: 0.5 + Math.random() * 2.5,
-        // Color: mix of white, cyan, indigo, purple
-        hue: 200 + Math.random() * 40 + (Math.random() < 0.3 ? 30 : 0), // 200-270 base
-        sat: 30 + Math.random() * 50,
-        light: 60 + Math.random() * 35,
+        // Theme-derived star colors
+        hue: config.hueMin + Math.random() * (config.hueMax - config.hueMin) + (Math.random() < 0.3 ? 20 : 0),
+        sat: config.sat - 10 + Math.random() * 20,
+        light: config.light - 10 + Math.random() * 20,
         o: 0.3 + Math.random() * 0.5,
         dx: (Math.random() - 0.5) * 0.15,
         dy: (Math.random() - 0.5) * 0.15,
@@ -170,7 +208,7 @@ function initParticles() {
       nebula.push({
         x: Math.random() * w, y: Math.random() * h,
         r: 60 + Math.random() * 120,
-        hue: 250 + Math.random() * 40,      // purple-indigo range
+        hue: config.nebulaHue + (Math.random() - 0.5) * 20,
         o: 0.03 + Math.random() * 0.06,
         dx: (Math.random() - 0.5) * 0.05,
         dy: (Math.random() - 0.5) * 0.05,
@@ -204,7 +242,7 @@ function initParticles() {
       s.twinkle += s.twinkleSpeed;
       const twinkle = 0.7 + Math.sin(s.twinkle) * 0.3;
       const alpha = s.o * twinkle;
-      const glow = s.r > 1.8; // big stars get glow
+      const glow = s.r > 1.8;
 
       if (glow) {
         ctx.beginPath();
@@ -218,7 +256,7 @@ function initParticles() {
       ctx.fill();
     }
 
-    // 3. Connection lines between nearby stars (only big ones, sparse)
+    // 3. Connection lines
     const bigStars = stars.filter(s => s.r > 1.5);
     for (let i = 0; i < bigStars.length; i += 2) {
       for (let j = i + 1; j < bigStars.length; j += 2) {
@@ -266,7 +304,6 @@ function initParticles() {
         blackholes.splice(i, 1);
         continue;
       }
-      // Draw
       const grad = ctx.createRadialGradient(bh.x, bh.y, 0, bh.x, bh.y, bh.radius);
       grad.addColorStop(0, 'rgba(0,0,0,0.95)');
       grad.addColorStop(0.2, 'rgba(0,0,0,0.8)');
@@ -276,14 +313,14 @@ function initParticles() {
       ctx.beginPath();
       ctx.arc(bh.x, bh.y, bh.radius, 0, Math.PI * 2);
       ctx.fill();
-      // Ring
+
       const pulse = 0.5 + Math.sin(bh.phase) * 0.3;
       ctx.beginPath();
       ctx.arc(bh.x, bh.y, bh.radius * pulse * 0.8, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(99,102,241,${0.15 * (1 - progress)})`;
       ctx.lineWidth = 1.5;
       ctx.stroke();
-      // Suck ring
+
       ctx.beginPath();
       ctx.arc(bh.x, bh.y, bh.radius * 0.3, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(255,255,255,${0.08 * (1 - progress)})`;
@@ -296,7 +333,6 @@ function initParticles() {
     for (const bh of blackholes) {
       const r = bh.radius;
       const str = bh.strength;
-      // Suck stars
       for (let i = stars.length - 1; i >= 0; i--) {
         const s = stars[i];
         const dx = bh.x - s.x;
@@ -306,18 +342,18 @@ function initParticles() {
           const pull = str * (1 - d / r);
           s.dx += (dx / d) * pull * 0.5;
           s.dy += (dy / d) * pull * 0.5;
-          s.r = Math.max(0.3, s.r - pull * 0.3); // shrink as sucked
+          s.r = Math.max(0.3, s.r - pull * 0.3);
           if (d < 6 || s.r < 0.3) {
             stars.splice(i, 1);
-            // Respawn new star at random edge
             const side = Math.floor(Math.random() * 4);
+            const config = getThemeParticleConfig();
             stars.push({
               x: side === 0 ? -5 : side === 1 ? w + 5 : Math.random() * w,
               y: side === 2 ? -5 : side === 3 ? h + 5 : Math.random() * h,
               r: 0.5 + Math.random() * 2.5,
-              hue: 200 + Math.random() * 40 + (Math.random() < 0.3 ? 30 : 0),
-              sat: 30 + Math.random() * 50,
-              light: 60 + Math.random() * 35,
+              hue: config.hueMin + Math.random() * (config.hueMax - config.hueMin) + (Math.random() < 0.3 ? 20 : 0),
+              sat: config.sat - 10 + Math.random() * 20,
+              light: config.light - 10 + Math.random() * 20,
               o: 0.3 + Math.random() * 0.5,
               dx: (Math.random() - 0.5) * 0.15,
               dy: (Math.random() - 0.5) * 0.15,
@@ -328,7 +364,6 @@ function initParticles() {
           }
         }
       }
-      // Suck trail particles
       for (let i = trailParticles.length - 1; i >= 0; i--) {
         const p = trailParticles[i];
         const dx = bh.x - p.x;
@@ -344,12 +379,11 @@ function initParticles() {
     }
   }
 
-  // ── Click handler (document-level, only if click not on interactive element) ──
+  // ── Click handler ──
   document.addEventListener('click', e => {
     const target = document.elementFromPoint(e.clientX, e.clientY);
     if (!target) return;
     const tag = target.tagName.toLowerCase();
-    // Skip clicks on interactive elements
     if (['a', 'button', 'input', 'textarea', 'select'].includes(tag)) return;
     if (target.closest('a, button, nav, .project-card')) return;
     spawnBlackhole(e.clientX, e.clientY);
@@ -371,6 +405,7 @@ function initParticles() {
     const vx = mouseX - lastMouseX;
     const vy = mouseY - lastMouseY;
     lastMouseX = mouseX; lastMouseY = mouseY;
+    const config = getThemeParticleConfig();
     if (isMouseInside) {
       for (let i = 0; i < (Math.random() < 0.5 ? 1 : 2); i++) {
         if (trailParticles.length >= MAX_TRAIL) trailParticles.shift();
@@ -381,7 +416,7 @@ function initParticles() {
           vx: vx * 0.3 + (Math.random() - 0.5) * 0.4,
           vy: vy * 0.3 + (Math.random() - 0.5) * 0.4,
           life: 30 + Math.random() * 25, maxLife: 55,
-          hue: 120 + Math.random() * 60,
+          hue: config.hueMin + Math.random() * (config.hueMax - config.hueMin),
           brightness: 0.6 + Math.random() * 0.4,
         });
       }
@@ -421,6 +456,11 @@ function initParticles() {
 
     requestAnimationFrame(draw);
   }
+
+  // Listen to theme change to recreate particles
+  window.addEventListener('theme-changed', () => {
+    initGalaxy();
+  });
 
   mql.addEventListener('change', e => { prefersReducedMotion = e.matches; });
   resize();

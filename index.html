@@ -24,9 +24,17 @@
         manifest-src 'self';
     ">
 
-    <!-- Verifikasi ownership untuk Google & Bing -->
+    <!-- Claim verification for Google Search Console & Bing Webmaster -->
     <meta name="google-site-verification" content="4t9PPsvTtPcqoCazyVRTmcZI15xWG8HIN6KS9AxA5KQ" />
     <meta name="msvalidate.01" content="BingWebmasterVerification" />
+    
+    <!-- Theme Auto-Detector (Avoids theme flashes) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('portfolio-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.className = 'scroll-smooth theme-' + savedTheme;
+        })();
+    </script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +52,28 @@
                 extend: {
                     colors: {
                         slate: {
-                            950: '#020617',
+                            50: 'var(--text-primary)',
+                            300: 'var(--text-secondary)',
+                            400: 'var(--text-secondary)',
+                            500: 'var(--text-secondary)',
+                            600: 'var(--text-muted)',
+                            900: 'var(--bg-secondary)',
+                            950: 'var(--bg-primary)',
+                        },
+                        indigo: {
+                            400: 'var(--accent-1)',
+                            500: 'var(--accent-1)',
+                            600: 'var(--accent-1)',
+                        },
+                        purple: {
+                            400: 'var(--accent-2)',
+                            500: 'var(--accent-2)',
+                            600: 'var(--accent-2)',
+                        },
+                        cyan: {
+                            400: 'var(--accent-3)',
+                            500: 'var(--accent-3)',
+                            600: 'var(--accent-3)',
                         }
                     },
                     fontFamily: {
@@ -137,6 +166,13 @@
                         class="nav-link px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-2 rounded-lg hover:bg-white/5">
                         <i class="fas fa-paper-plane text-xs"></i> Contact
                     </a>
+                    <!-- Custom Theme Switcher -->
+                    <div class="flex items-center gap-2 ml-4 pl-4 border-l border-white/10">
+                        <button onclick="setTheme('light')" class="w-5 h-5 rounded-full bg-[#f5f5f4] border border-stone-300 transition-transform hover:scale-125 focus:outline-none" title="Light Theme"></button>
+                        <button onclick="setTheme('dark')" class="w-5 h-5 rounded-full bg-[#0f172a] border border-slate-700 transition-transform hover:scale-125 focus:outline-none" title="Dark Theme"></button>
+                        <button onclick="setTheme('orange')" class="w-5 h-5 rounded-full bg-[#f97316] border border-amber-600 transition-transform hover:scale-125 focus:outline-none" title="Orange Theme"></button>
+                        <button onclick="setTheme('sea')" class="w-5 h-5 rounded-full bg-[#14b8a6] border border-teal-600 transition-transform hover:scale-125 focus:outline-none" title="Sea Theme"></button>
+                    </div>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -177,6 +213,16 @@
                         class="drawer-link flex items-center gap-4 px-5 py-3.5 text-base font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all translate-x-4 opacity-0" style="transition:all 0.3s cubic-bezier(0.32,0.72,0,1) 0.20s">
                         <i class="fas fa-paper-plane w-5 text-center text-indigo-400"></i> Contact
                     </a>
+                </div>
+                <!-- Custom Mobile Theme Switcher -->
+                <div class="py-6 border-t border-white/5 px-5">
+                    <p class="text-xs text-slate-500 mb-3">Theme Variant</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="setTheme('light')" class="px-2.5 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold bg-[#f5f5f4] text-stone-900 transition-all hover:scale-105">Light</button>
+                        <button onclick="setTheme('dark')" class="px-2.5 py-1.5 rounded-lg border border-slate-700 text-xs font-semibold bg-[#0f172a] text-slate-50 transition-all hover:scale-105">Dark</button>
+                        <button onclick="setTheme('orange')" class="px-2.5 py-1.5 rounded-lg border border-amber-600 text-xs font-semibold bg-[#f97316] text-orange-50 transition-all hover:scale-105">Orange</button>
+                        <button onclick="setTheme('sea')" class="px-2.5 py-1.5 rounded-lg border border-teal-600 text-xs font-semibold bg-[#14b8a6] text-cyan-50 transition-all hover:scale-105">Sea</button>
+                    </div>
                 </div>
                 <!-- Bottom section -->
                 <div class="mt-auto mb-8 px-5">
