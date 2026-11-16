@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollProgress();
   initParticles();
   initTypewriter();
+  initOrbitalNav();
   renderSkillsGrid();
   renderProjects('all');
   renderSocials();
@@ -736,5 +737,108 @@ function initTiltCards() {
       card.style.setProperty('--rot-x', '0deg');
       card.style.setProperty('--rot-y', '0deg');
     });
+  });
+}
+
+/* ── Orbital Navigation Widget ───────────────────────────────── */
+function initOrbitalNav() {
+  const nav = document.getElementById('orbitalNav');
+  if (!nav) return;
+  const trigger = document.getElementById('triggerBtn');
+  const items = nav.querySelectorAll('.orbit-item');
+  const dragRing = document.getElementById('dragRing');
+  const orbitTrack = nav.querySelector('.orbit-track');
+
+  /* Orbit positions */
+  const RADIUS = 115, TOTAL = items.length;
+  items.forEach((item, i) => {
+    const a = (i * (360 / TOTAL) - 90) * Math.PI / 180;
+    item.style.setProperty('--x', `${Math.cos(a) * RADIUS}px`);
+    item.style.setProperty('--y', `${Math.sin(a) * RADIUS}px`);
+  });
+
+  /* Drag via center trigger; click (no drag) toggles open */
+  let isDragging = false, hasDragged = false, startX, startY, currentX, currentY;
+  const r = nav.getBoundingClientRect();
+  currentX = r.left; currentY = r.top;
+
+  trigger.addEventListener('pointerdown', (e) => {
+    isDragging = true; hasDragged = false;
+    startX = e.clientX - currentX;
+    startY = e.clientY - currentY;
+    nav.classList.add('dragging');
+    trigger.setPointerCapture(e.pointerId);
+  });
+  trigger.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    const nx = e.clientX - startX, ny = e.clientY - startY;
+    if (Math.abs(nx - currentX) > 3 || Math.abs(ny - currentY) > 3) hasDragged = true;
+    currentX = nx; currentY = ny;
+    nav.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+  });
+  trigger.addEventListener('pointerup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    nav.classList.remove('dragging');
+    trigger.releasePointerCapture(e.pointerId);
+    if (!hasDragged) {
+      nav.classList.toggle('open');
+    } else {
+      const pad = 40;
+      if (currentX < pad) currentX = pad;
+      if (currentX > innerWidth - pad - 80) currentX = innerWidth - pad - 80;
+      if (currentY < pad) currentY = pad;
+      if (currentY > innerHeight - pad - 80) currentY = innerHeight - pad - 80;
+      nav.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+    }
+  });
+  trigger.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  /* Rotate via drag-ring empty area */
+  let isRotating = false, dragStartAngle = 0, dragStartRotation = 0;
+
+  dragRing.addEventListener('pointerdown', (e) => {
+    if (!nav.classList.contains('open')) return;
+    isRotating = true;
+    dragRing.setPointerCapture(e.pointerId);
+    const rc = nav.getBoundingClientRect();
+    const cx = rc.left + rc.width / 2, cy = rc.top + rc.height / 2;
+    dragStartAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI;
+    dragStartRotation = parseFloat(getComputedStyle(nav).getPropertyValue('--manual-rot')) || 0;
+    orbitTrack.style.transition = 'none';
+    items.forEach(it => it.style.transition = 'none');
+  });
+  dragRing.addEventListener('pointermove', (e) => {
+    if (!isRotating) return;
+    const rc = nav.getBoundingClientRect();
+    const cx = rc.left + rc.width / 2, cy = rc.top + rc.height / 2;
+    const cur = Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI;
+    const rot = dragStartRotation + (cur - dragStartAngle);
+    nav.style.setProperty('--manual-rot', `${rot}deg`);
+  });
+  dragRing.addEventListener('pointerup', (e) => {
+    if (!isRotating) return;
+    isRotating = false;
+    dragRing.releasePointerCapture(e.pointerId);
+    orbitTrack.style.transition = '';
+    items.forEach(it => it.style.transition = '');
+  });
+
+  /* Item click = smooth scroll to section */
+  items.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const target = item.dataset.target;
+      nav.classList.remove('open');
+      if (!target) return;
+      document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  /* Resize clamp */
+  window.addEventListener('resize', () => {
+    if (currentX > innerWidth - 120) currentX = innerWidth - 120;
+    if (currentY > innerHeight - 120) currentY = innerHeight - 120;
+    nav.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
   });
 }
