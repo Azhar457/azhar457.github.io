@@ -111,9 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderProjects('all');
   renderSocials();
   initCounter();
-  initNavbar();
-  initNavActive();
-  initMobileMenu();
   initFilters();
   initAboutProgress();
   initProjectModal();
@@ -680,72 +677,6 @@ function animateNumber(el, target) {
   }, 30);
 }
 
-/* ── Navbar ──────────────────────────────────────────────────── */
-function initNavbar() {
-  window.addEventListener('scroll', () => {
-    document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50);
-  });
-}
-
-/* ── Active Nav Link (IntersectionObserver) ──────────────────── */
-function initNavActive() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-link');
-  if (!sections.length || !navLinks.length) return;
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        navLinks.forEach(l => l.classList.remove('active'));
-        const matching = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
-        if (matching) matching.classList.add('active');
-      }
-    });
-  }, { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' });
-  sections.forEach(s => obs.observe(s));
-}
-
-/* ── Mobile Drawer (slide from right) ────────────────────────── */
-function initMobileMenu() {
-  const btn = document.getElementById('mobile-menu-btn');
-  const drawer = document.getElementById('mobile-drawer');
-  const panel = document.getElementById('drawer-panel');
-  const backdrop = document.getElementById('drawer-backdrop');
-  const links = drawer.querySelectorAll('.drawer-link');
-  if (!btn || !drawer) return;
-
-  function open() {
-    drawer.classList.remove('pointer-events-none');
-    backdrop.classList.remove('opacity-0');
-    backdrop.classList.add('opacity-100');
-    panel.classList.remove('translate-x-full');
-    btn.classList.add('open');
-    document.body.classList.add('overflow-hidden');
-    // Stagger links
-    links.forEach((l, i) => {
-      setTimeout(() => {
-        l.classList.remove('translate-x-4', 'opacity-0');
-      }, 50 + i * 50);
-    });
-  }
-  function close() {
-    drawer.classList.add('pointer-events-none');
-    backdrop.classList.remove('opacity-100');
-    backdrop.classList.add('opacity-0');
-    panel.classList.add('translate-x-full');
-    btn.classList.remove('open');
-    document.body.classList.remove('overflow-hidden');
-    links.forEach(l => {
-      l.classList.add('translate-x-4', 'opacity-0');
-    });
-  }
-
-  btn.addEventListener('click', () => {
-    if (panel.classList.contains('translate-x-full')) open();
-    else close();
-  });
-  backdrop.addEventListener('click', close);
-  links.forEach(l => l.addEventListener('click', close));
-}
 
 /* ── About Section Scroll Progress ──────────────────────────── */
 function initAboutProgress() {

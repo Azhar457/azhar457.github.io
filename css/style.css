@@ -194,43 +194,7 @@ body { scroll-behavior: smooth; background: var(--bg-primary); color: var(--text
   border: 1px solid var(--glass-border);
 }
 
-/* ── Navbar ────────────────────────────────────────────────────── */
-#navbar.scrolled {
-  background: color-mix(in srgb, var(--bg-primary) 80%, transparent);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-}
 
-.nav-link {
-  position: relative;
-  transition: color 0.3s;
-}
-.nav-link.active {
-  color: var(--accent-1) !important;
-}
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 50%;
-  width: 0; height: 2px;
-  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-  border-radius: 2px;
-}
-.nav-link:hover::after,
-.nav-link.active::after { width: 60%; }
-
-/* ── Mobile Menu ──────────────────────────────────────────────── */
-#mobile-menu.open {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-#mobile-menu-btn.open #line-1 { transform: translateY(8px) rotate(45deg); }
-#mobile-menu-btn.open #line-2 { opacity: 0; }
-#mobile-menu-btn.open #line-3 { transform: translateY(-8px) rotate(-45deg); }
 
 /* ── Global Particles Canvas ────────────────────────────────────── */
 #global-particles {
