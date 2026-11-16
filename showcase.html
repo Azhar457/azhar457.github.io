@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Solar Showcase — Azhar Muttaqien</title>
 <meta name="description" content="Explore Azhar Muttaqien's projects as a solar system — click a planet to visit.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; overflow: hidden; }
@@ -85,12 +86,11 @@
   }
   .sun:hover { transform: translate(-50%, -50%) scale(1.12); }
   .sun::after {
-    content: '🏠';
+    content: '';
     position: absolute; inset: 0;
     display: grid; place-items: center;
-    font-size: 1.6em;
-    filter: drop-shadow(0 0 4px rgba(0,0,0,.4));
   }
+  .sun i { font-size: 1.5em; color: #5b2400; filter: drop-shadow(0 0 3px rgba(255,255,255,.5)); }
   .sun::before {
     content: '';
     position: absolute; inset: -20px;
@@ -173,6 +173,12 @@
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
+  .planet-icon {
+    color: rgba(255,255,255,.9);
+    filter: drop-shadow(0 0 6px rgba(0,0,0,.45));
+    font-size: 1.05em;
+    pointer-events: none;
+  }
 
   /* ===== Click ripple ===== */
   @keyframes ripple {
@@ -249,7 +255,7 @@
 <div class="system" id="system" role="navigation" aria-label="Project solar system">
   <div class="orbit-ring" id="ringInner"></div>
   <div class="orbit-ring outer" id="ringOuter"></div>
-  <button class="sun" id="sun" aria-label="Back to home" title="Back to home"></button>
+  <button class="sun" id="sun" aria-label="Back to home" title="Back to home"><i class="fa-solid fa-house"></i></button>
 </div>
 
 <div class="controls">
@@ -282,24 +288,24 @@
   /* ================= Planet config ================= */
   /* Inner ring — deployed web apps */
   const INNER = [
-    { label: 'JarsLab',        icon: '🧪', color: '#4ecdc4', size: 46, url: 'https://jarslab.dpdns.org' },
-    { label: 'PAI Profesi',    icon: '📖', color: '#ffd93d', size: 44, url: 'https://paiprofesi.netlify.app' },
-    { label: 'Akhlak Terpuji', icon: '🕌', color: '#ff6b6b', size: 44, url: 'https://pai-akhlakterpuji.netlify.app' },
-    { label: 'Kopalan',        icon: '🎨', color: '#a855f7', size: 42, url: 'https://kopalanusantaratest.netlify.app' },
-    { label: 'DKM UAB',        icon: '🏫', color: '#60a5fa', size: 40, url: 'https://ulul-albaab-website.vercel.app/' },
-    { label: 'TesDia',         icon: '🩺', color: '#34d399', size: 40, url: 'https://foregord.github.io/' },
-    { label: 'Orbit Mandiri',  icon: '💻', color: '#fb923c', size: 42, url: 'https://orbitmandiricomputer.biz.id/' },
-    { label: 'WWM',            icon: '⚔️', color: '#f472b6', size: 46, url: 'https://lastvillain.vercel.app' },
-    { label: 'RW16 Ciwaruga',  icon: '🏘️', color: '#22d3ee', size: 42, url: 'https://rw16-ciwaruga-one.vercel.app' },
-    { label: 'Araya Attendance', icon: '📋', color: '#c084fc', size: 40, url: 'https://fe-araya-bussiness-attendace-module.vercel.app' },
+    { label: 'JarsLab',        icon: 'fa-flask',        color: '#4ecdc4', size: 46, url: 'https://jarslab.dpdns.org' },
+    { label: 'PAI Profesi',    icon: 'fa-book-open',    color: '#ffd93d', size: 44, url: 'https://paiprofesi.netlify.app' },
+    { label: 'Akhlak Terpuji', icon: 'fa-mosque',       color: '#ff6b6b', size: 44, url: 'https://pai-akhlakterpuji.netlify.app' },
+    { label: 'Kopalan',        icon: 'fa-palette',      color: '#a855f7', size: 42, url: 'https://kopalanusantaratest.netlify.app' },
+    { label: 'DKM UAB',        icon: 'fa-school',       color: '#60a5fa', size: 40, url: 'https://ulul-albaab-website.vercel.app/' },
+    { label: 'TesDia',         icon: 'fa-stethoscope',  color: '#34d399', size: 40, url: 'https://foregord.github.io/' },
+    { label: 'Orbit Mandiri',  icon: 'fa-laptop-code',  color: '#fb923c', size: 42, url: 'https://orbitmandiricomputer.biz.id/' },
+    { label: 'WWM',            icon: 'fa-gamepad',      color: '#f472b6', size: 46, url: 'https://lastvillain.vercel.app' },
+    { label: 'RW16 Ciwaruga',  icon: 'fa-people-roof',  color: '#22d3ee', size: 42, url: 'https://rw16-ciwaruga-one.vercel.app' },
+    { label: 'Araya Attendance', icon: 'fa-clipboard-list', color: '#c084fc', size: 40, url: 'https://fe-araya-bussiness-attendace-module.vercel.app' },
   ];
   /* Outer ring — homelab & open source */
   const OUTER = [
-    { label: 'Immich',    icon: '📸', color: '#818cf8', size: 40, url: 'https://immich.azharmtq.my.id' },
-    { label: 'Nextcloud', icon: '☁️', color: '#0ea5e9', size: 40, url: 'https://nextcloud.azharmtq.my.id' },
-    { label: 'jarsWAF',   icon: '🛡️', color: '#f87171', size: 38, url: 'https://github.com/Azhar457/jarswaf' },
-    { label: '9router',   icon: '🔀', color: '#a78bfa', size: 38, url: 'https://github.com/Azhar457/9router' },
-    { label: 'Netools',   icon: '🛰️', color: '#4ade80', size: 38, url: 'https://github.com/Azhar457/Netools' },
+    { label: 'Immich',    icon: 'fa-images',        color: '#818cf8', size: 40, url: 'https://immich.azharmtq.my.id' },
+    { label: 'Nextcloud', icon: 'fa-cloud',         color: '#0ea5e9', size: 40, url: 'https://nextcloud.azharmtq.my.id' },
+    { label: 'jarsWAF',   icon: 'fa-shield-halved', color: '#f87171', size: 38, url: 'https://github.com/Azhar457/jarswaf' },
+    { label: '9router',   icon: 'fa-shuffle',       color: '#a78bfa', size: 38, url: 'https://github.com/Azhar457/9router' },
+    { label: 'Netools',   icon: 'fa-satellite-dish', color: '#4ade80', size: 38, url: 'https://github.com/Azhar457/Netools' },
   ];
 
   const system = document.getElementById('system');
@@ -338,7 +344,7 @@
       planet.style.boxShadow = `0 0 25px ${p.color}66, inset 0 0 20px ${p.color}55`;
       planet.style.border = `1.5px solid ${p.color}cc`;
       planet.innerHTML = `
-        <span style="filter:drop-shadow(0 0 4px rgba(0,0,0,.5))">${p.icon}</span>
+        <i class="fa-solid ${p.icon} planet-icon"></i>
         <div class="label">${p.label}</div>
       `;
       planet.dataset.baseAngle = (i / list.length) * Math.PI * 2;
