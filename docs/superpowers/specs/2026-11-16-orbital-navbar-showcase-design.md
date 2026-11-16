@@ -50,12 +50,29 @@ No new dependencies. No external deploy (GitHub Pages only).
 
 - Fork of orbitral-theme.html. Keeps: starfield, sun pulse, parallax,
   pause/speed controls, reduced-motion support.
-- Data: the 10 projects in `js/script.js` PROJECTS array (8 web + 2 homelab),
-  hardcoded as the PLANETS config in showcase.html (title, emoji icon, color,
-  URL). Sun = link back to `index.html`.
+- Data: verified projects, hardcoded as PLANETS config (title, emoji icon,
+  color, URL). Sun = link back to `index.html`.
+- Two rings (inner/outer, like a real solar system):
+  - **Inner ring — deployed web apps (10):** JarsLab, PAI Profesi, Akhlak
+    Terpuji, Kopalan, TesDia, Orbit Mandiri, DKM UAB, WWM
+    (lastvillain.vercel.app), RW16 Ciwaruga (rw16-ciwaruga-one.vercel.app),
+    Araya Business Attendance Module
+    (fe-araya-bussiness-attendace-module.vercel.app)
+  - **Outer ring — homelab & open source (5):** Immich, Nextcloud, jarsWAF
+    (github.com/Azhar457/jarswaf, Rust), 9router
+    (github.com/Azhar457/9router, fork), Netools
+    (github.com/Azhar457/Netools, Python)
 - Planet click → open project URL in new tab + existing ripple effect.
   Planet labels show project titles on hover (already in the fork source).
 - Self-contained single file (no Tailwind, no AOS); emoji icons, no icon CDN.
+- Project list verified against `/mnt/data_d/Projects` (wwm, rw16-ciwaruga,
+  jarswaf, Netools exist locally with matching stack) and user-provided
+  Vercel/GitHub listings.
+
+## Protected content (do not touch)
+
+- The blackhole particle effect ("Tersedot ke blackhole") in index.html stays
+  exactly as-is. No edits to its markup, CSS, or JS.
 
 ### Linking
 - Small "Solar Showcase" button/link in the Projects section header on
