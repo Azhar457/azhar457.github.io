@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Showcase — Azhar Muttaqien</title>
+<meta name="description" content="Explore Azhar Muttaqien's projects as a solar system — click a planet to visit.">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: radial-gradient(ellipse at center, #1a0b2e 0%, #0a0118 55%, #000 100%);
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    color: #fff;
+    display: grid;
+    place-items: center;
+  }
+
+  /* ===== Starfield ===== */
+  .starfield { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: .15; transform: scale(.7); }
+    to   { opacity: 1;   transform: scale(1.1); }
+  }
+
+  /* ===== Title ===== */
+  .title {
+    position: fixed; top: 24px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px; letter-spacing: 6px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+    font-weight: 300; z-index: 10;
+    pointer-events: none;
+  }
+
+  /* ===== System ===== */
+  .system {
+    position: relative;
+    width: min(90vmin, 640px);
+    height: min(90vmin, 640px);
+    z-index: 1;
+    will-change: transform;
+  }
+
+  /* ===== Orbit rings ===== */
+  .orbit-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px dashed rgba(200, 160, 255, 0.22);
+    box-shadow:
+      inset 0 0 60px rgba(200, 160, 255, 0.05),
+      0 0 40px rgba(200, 160, 255, 0.05);
+    pointer-events: none;
+  }
+  .orbit-ring.outer { border-color: rgba(120, 200, 255, 0.16); }
+
+  /* ===== Sun ===== */
+  .sun {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: none;
+    background: radial-gradient(circle at 35% 30%,
+      #fffbe0, #ffd93d 35%, #ff9500 65%, #d13f00 100%);
+    box-shadow:
+      0 0 30px #ffcc00,
+      0 0 60px #ff8800,
+      0 0 100px #ff4400,
+      0 0 160px rgba(255,68,0,.3);
+    z-index: 5;
+    cursor: pointer;
+    animation: sunPulse 4s ease-in-out infinite;
+    transition: transform .3s;
+  }
+  .sun:hover { transform: translate(-50%, -50%) scale(1.12); }
+  .sun::after {
+    content: '🏠';
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    font-size: 1.6em;
+    filter: drop-shadow(0 0 4px rgba(0,0,0,.4));
+  }
+  .sun::before {
+    content: '';
+    position: absolute; inset: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,180,0,.4), transparent 70%);
+    animation: sunRotate 20s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes sunPulse {
+    0%,100% {
+      box-shadow: 0 0 30px #ffcc00, 0 0 60px #ff8800,
+                  0 0 100px #ff4400, 0 0 160px rgba(255,68,0,.3);
+    }
+    50% {
+      box-shadow: 0 0 40px #ffd700, 0 0 80px #ffa500,
+                  0 0 130px #ff5500, 0 0 200px rgba(255,68,0,.4);
+    }
+  }
+  @keyframes sunRotate { to { transform: rotate(360deg); } }
+
+  /* ===== Orbiter (positioning layer) ===== */
+  .orbiter {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    will-change: transform;
+  }
+
+  /* ===== Planet (visual layer) ===== */
+  .planet {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 1.1em;
+    transition:
+      transform .3s cubic-bezier(.34, 1.56, .64, 1),
+      box-shadow .3s, filter .3s;
+    will-change: transform;
+  }
+  .planet::before {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    background: inherit;
+    filter: blur(14px);
+    opacity: .55;
+    z-index: -1;
+  }
+  .planet:hover {
+    transform: translate(-50%, -50%) scale(1.25);
+    filter: brightness(1.3);
+    z-index: 20;
+  }
+
+  /* ===== Label ===== */
+  .planet .label {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    background: rgba(10, 2, 30, 0.92);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s, transform .2s;
+    border: 1px solid rgba(200, 160, 255, 0.25);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0,0,0,.4);
+  }
+  .planet:hover .label {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ===== Click ripple ===== */
+  @keyframes ripple {
+    to { transform: scale(2.6); opacity: 0; }
+  }
+
+  /* ===== Controls & hint ===== */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    background: rgba(255,255,255,.04);
+    padding: 6px;
+    border-radius: 30px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.08);
+    z-index: 10;
+  }
+  .controls button {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,.6);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all .2s;
+    font-family: inherit;
+  }
+  .controls button:hover {
+    color: #fff;
+    background: rgba(255,255,255,.08);
+  }
+  .controls button.on {
+    color: #fff;
+    background: linear-gradient(135deg, rgba(168,85,247,.5), rgba(96,165,250,.5));
+    box-shadow: 0 0 15px rgba(168,85,247,.4);
+  }
+  .hint {
+    position: fixed;
+    bottom: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,.35);
+    z-index: 10;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 500px) {
+    .system { width: 98vmin; height: 98vmin; }
+    .sun { width: 60px; height: 60px; }
+    .planet { font-size: .9em; }
+    .hint { letter-spacing: 1px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sun, .sun::before, .star { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="starfield" id="starfield"></div>
+<div class="title">Solar Showcase — Azhar Muttaqien</div>
+<div class="hint">Click a planet to visit · Sun returns home</div>
+
+<div class="system" id="system" role="navigation" aria-label="Project solar system">
+  <div class="orbit-ring" id="ringInner"></div>
+  <div class="orbit-ring outer" id="ringOuter"></div>
+  <button class="sun" id="sun" aria-label="Back to home" title="Back to home"></button>
+</div>
+
+<div class="controls">
+  <button data-speed="0">Pause</button>
+  <button data-speed="1">Slow</button>
+  <button data-speed="2" class="on">Normal</button>
+  <button data-speed="4">Fast</button>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ================= Stars ================= */
+  const starfield = document.getElementById('starfield');
+  for (let i = 0; i < 160; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.2 + 0.3;
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      --dur:${2 + Math.random()*3}s;
+      animation-delay:-${Math.random()*5}s;
+    `;
+    starfield.appendChild(s);
+  }
+
+  /* ================= Planet config ================= */
+  /* Inner ring — deployed web apps */
+  const INNER = [
+    { label: 'JarsLab',        icon: '🧪', color: '#4ecdc4', size: 46, url: 'https://jarslab.dpdns.org' },
+    { label: 'PAI Profesi',    icon: '📖', color: '#ffd93d', size: 44, url: 'https://paiprofesi.netlify.app' },
+    { label: 'Akhlak Terpuji', icon: '🕌', color: '#ff6b6b', size: 44, url: 'https://pai-akhlakterpuji.netlify.app' },
+    { label: 'Kopalan',        icon: '🎨', color: '#a855f7', size: 42, url: 'https://kopalanusantaratest.netlify.app' },
+    { label: 'DKM UAB',        icon: '🏫', color: '#60a5fa', size: 40, url: 'https://ulul-albaab-website.vercel.app/' },
+    { label: 'TesDia',         icon: '🩺', color: '#34d399', size: 40, url: 'https://foregord.github.io/' },
+    { label: 'Orbit Mandiri',  icon: '💻', color: '#fb923c', size: 42, url: 'https://orbitmandiricomputer.biz.id/' },
+    { label: 'WWM',            icon: '⚔️', color: '#f472b6', size: 46, url: 'https://lastvillain.vercel.app' },
+    { label: 'RW16 Ciwaruga',  icon: '🏘️', color: '#22d3ee', size: 42, url: 'https://rw16-ciwaruga-one.vercel.app' },
+    { label: 'Araya Attendance', icon: '📋', color: '#c084fc', size: 40, url: 'https://fe-araya-bussiness-attendace-module.vercel.app' },
+  ];
+  /* Outer ring — homelab & open source */
+  const OUTER = [
+    { label: 'Immich',    icon: '📸', color: '#818cf8', size: 40, url: 'https://immich.azharmtq.my.id' },
+    { label: 'Nextcloud', icon: '☁️', color: '#0ea5e9', size: 40, url: 'https://nextcloud.azharmtq.my.id' },
+    { label: 'jarsWAF',   icon: '🛡️', color: '#f87171', size: 38, url: 'https://github.com/Azhar457/jarswaf' },
+    { label: '9router',   icon: '🔀', color: '#a78bfa', size: 38, url: 'https://github.com/Azhar457/9router' },
+    { label: 'Netools',   icon: '🛰️', color: '#4ade80', size: 38, url: 'https://github.com/Azhar457/Netools' },
+  ];
+
+  const system = document.getElementById('system');
+  const ringInner = document.getElementById('ringInner');
+  const ringOuter = document.getElementById('ringOuter');
+  const sun = document.getElementById('sun');
+
+  /* ================= State ================= */
+  let angle = 0;
+  let speedMult = 2;
+  const BASE_SPEED = 0.00025; // radians per millisecond
+  const OUTER_SPEED = 0.6;    // outer ring orbits slower
+  let lastTime = performance.now();
+  let mouseX = 0.5, mouseY = 0.5;
+  let px = 0, py = 0;
+
+  /* ================= Build planets ================= */
+  const rings = [
+    { list: INNER,  factor: 0.30 },
+    { list: OUTER,  factor: 0.47 },
+  ];
+
+  const orbiters = rings.flatMap(({ list, factor }) =>
+    list.map((p, i) => {
+      const orb = document.createElement('div');
+      orb.className = 'orbiter';
+
+      const planet = document.createElement('button');
+      planet.className = 'planet';
+      planet.setAttribute('aria-label', p.label);
+      planet.setAttribute('title', p.label);
+      planet.style.width  = p.size + 'px';
+      planet.style.height = p.size + 'px';
+      planet.style.background = `radial-gradient(circle at 30% 30%,
+        ${p.color}ff, ${p.color}cc 45%, ${p.color}44 85%)`;
+      planet.style.boxShadow = `0 0 25px ${p.color}66, inset 0 0 20px ${p.color}55`;
+      planet.style.border = `1.5px solid ${p.color}cc`;
+      planet.innerHTML = `
+        <span style="filter:drop-shadow(0 0 4px rgba(0,0,0,.5))">${p.icon}</span>
+        <div class="label">${p.label}</div>
+      `;
+      planet.dataset.baseAngle = (i / list.length) * Math.PI * 2;
+
+      planet.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+          position:absolute; inset:0; border-radius:50%;
+          border:2px solid ${p.color};
+          animation:ripple .8s ease-out forwards;
+          pointer-events:none;
+        `;
+        planet.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 800);
+        window.open(p.url, '_blank', 'noopener');
+      });
+
+      orb.appendChild(planet);
+      system.appendChild(orb);
+      return { orb, planet, factor, offset: (i % 2) * 0.3 };
+    })
+  );
+
+  /* ================= Layout ================= */
+  const updateRings = () => {
+    const w = system.getBoundingClientRect().width;
+    const set = (el, f) => {
+      const d = w * f * 2;
+      el.style.width = d + 'px';
+      el.style.height = d + 'px';
+    };
+    set(ringInner, 0.30);
+    set(ringOuter, 0.47);
+  };
+
+  /* ================= Render loop ================= */
+  const render = (t) => {
+    const dt = Math.min(t - lastTime, 50);
+    lastTime = t;
+
+    angle += BASE_SPEED * speedMult * dt;
+
+    // Parallax easing
+    const tx = (mouseX - 0.5) * 20;
+    const ty = (mouseY - 0.5) * 20;
+    px += (tx - px) * 0.05;
+    py += (ty - py) * 0.05;
+    system.style.transform = `translate(${px}px, ${py}px)`;
+
+    orbiters.forEach(({ orb, planet, factor, offset }) => {
+      const r = system.getBoundingClientRect().width * factor;
+      const a = parseFloat(planet.dataset.baseAngle) + angle * (factor === 0.47 ? OUTER_SPEED : 1) + offset;
+      orb.style.transform =
+        `translate(${Math.cos(a) * r}px, ${Math.sin(a) * r}px)`;
+    });
+
+    requestAnimationFrame(render);
+  };
+
+  /* ================= Controls ================= */
+  const buttons = document.querySelectorAll('.controls button');
+  const setSpeed = (v) => {
+    speedMult = parseFloat(v);
+    buttons.forEach(b =>
+      b.classList.toggle('on', b.dataset.speed === String(v)));
+  };
+  buttons.forEach(btn =>
+    btn.addEventListener('click', () => setSpeed(btn.dataset.speed)));
+
+  // Sun = back home
+  sun.addEventListener('click', () => location.href = 'index.html');
+
+  // Parallax
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX / innerWidth;
+    mouseY = e.clientY / innerHeight;
+  });
+
+  window.addEventListener('resize', updateRings);
+
+  /* ================= Init ================= */
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  updateRings();
+  setSpeed(reduced ? 0 : 2);
+  requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>
