@@ -835,6 +835,30 @@ function initOrbitalNav() {
     });
   });
 
+  /* Theme sub-orbit */
+  const themeItem = document.getElementById('themeItem');
+  const themeSub = document.getElementById('themeSubOrbit');
+  const SUB_R = 190;
+  themeSub.querySelectorAll('.theme-dot').forEach((dot, i, dots) => {
+    const a = (i * (360 / dots.length) - 90) * Math.PI / 180;
+    dot.style.setProperty('--sub-x', `${Math.cos(a) * SUB_R}px`);
+    dot.style.setProperty('--sub-y', `${Math.sin(a) * SUB_R}px`);
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.setTheme(dot.dataset.theme);
+      nav.classList.remove('themes-open');
+    });
+  });
+  themeItem.addEventListener('click', (e) => {
+    e.stopPropagation();
+    nav.classList.toggle('themes-open');
+  });
+  document.addEventListener('click', (e) => {
+    if (nav.classList.contains('themes-open') && !nav.contains(e.target)) {
+      nav.classList.remove('themes-open');
+    }
+  });
+
   /* Resize clamp */
   window.addEventListener('resize', () => {
     if (currentX > innerWidth - 120) currentX = innerWidth - 120;
