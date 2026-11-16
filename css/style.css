@@ -419,6 +419,7 @@ body { scroll-behavior: smooth; background: var(--bg-primary); color: var(--text
   width: 80px; height: 80px;
   transform: translate3d(calc(100vw - 120px), calc(100vh - 120px), 0);
   z-index: 9999; touch-action: none; user-select: none;
+  pointer-events: none;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   --open-rot: 120deg;
   --manual-rot: 0deg;
@@ -465,6 +466,7 @@ body { scroll-behavior: smooth; background: var(--bg-primary); color: var(--text
   box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), inset 0 0 15px rgba(255,255,255,0.1);
   display: flex; align-items: center; justify-content: center;
   cursor: grab; z-index: 100; transition: all 0.3s ease;
+  pointer-events: auto;
 }
 .center-trigger:active { cursor: grabbing; }
 .center-trigger:hover {
@@ -531,7 +533,7 @@ body { scroll-behavior: smooth; background: var(--bg-primary); color: var(--text
 .theme-sub-orbit {
   position: absolute; top: 50%; left: 50%;
   width: 0; height: 0;
-  z-index: 45; pointer-events: none;
+  z-index: 55; pointer-events: none;
 }
 .theme-dot {
   position: absolute; top: 0; left: 0;

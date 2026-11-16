@@ -758,12 +758,13 @@ function initOrbitalNav() {
   });
 
   /* Drag via center trigger; click (no drag) toggles open */
-  let isDragging = false, hasDragged = false, startX, startY, currentX, currentY;
+  let isDragging = false, hasDragged = false, startX, startY, downX = 0, downY = 0, currentX, currentY;
   const r = nav.getBoundingClientRect();
   currentX = r.left; currentY = r.top;
 
   trigger.addEventListener('pointerdown', (e) => {
     isDragging = true; hasDragged = false;
+    downX = currentX; downY = currentY;
     startX = e.clientX - currentX;
     startY = e.clientY - currentY;
     nav.classList.add('dragging');
@@ -772,10 +773,20 @@ function initOrbitalNav() {
   trigger.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
     const nx = e.clientX - startX, ny = e.clientY - startY;
-    if (Math.abs(nx - currentX) > 3 || Math.abs(ny - currentY) > 3) hasDragged = true;
+    if (Math.abs(nx - downX) > 3 || Math.abs(ny - downY) > 3) hasDragged = true;
     currentX = nx; currentY = ny;
     nav.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
   });
+  /* Keep the full orbit on screen (items extend RADIUS+~30px from center) */
+  function clampToOrbit() {
+    const PAD = 40;
+    const minX = RADIUS + PAD, maxX = innerWidth - RADIUS - PAD;
+    const minY = RADIUS + PAD, maxY = innerHeight - RADIUS - PAD;
+    currentX = Math.min(Math.max(currentX, minX), Math.max(minX, maxX));
+    currentY = Math.min(Math.max(currentY, minY), Math.max(minY, maxY));
+    nav.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+  }
+
   trigger.addEventListener('pointerup', (e) => {
     if (!isDragging) return;
     isDragging = false;
@@ -783,13 +794,9 @@ function initOrbitalNav() {
     trigger.releasePointerCapture(e.pointerId);
     if (!hasDragged) {
       nav.classList.toggle('open');
+      clampToOrbit();
     } else {
-      const pad = 40;
-      if (currentX < pad) currentX = pad;
-      if (currentX > innerWidth - pad - 80) currentX = innerWidth - pad - 80;
-      if (currentY < pad) currentY = pad;
-      if (currentY > innerHeight - pad - 80) currentY = innerHeight - pad - 80;
-      nav.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+      clampToOrbit();
     }
   });
   trigger.addEventListener('contextmenu', (e) => e.preventDefault());
